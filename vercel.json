@@ -1,41 +1,4 @@
 {
-  "version": 2,
   "cleanUrls": true,
-  "routes": [
-    {
-      "src": "/sign-in",
-      "dest": "/sign-in.html"
-    },
-    {
-      "src": "/register",
-      "dest": "/register.html"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/dashboard.html"
-    },
-    {
-      "src": "/transfer",
-      "dest": "/transfer.html"
-    },
-    {
-      "src": "/activity",
-      "dest": "/activity.html"
-    },
-    {
-      "src": "/cards",
-      "dest": "/cards.html"
-    },
-    {
-      "src": "/admin-login",
-      "dest": "/admin-login.html"
-    },
-    {
-      "src": "/admin",
-      "dest": "/admin.html"
-    },
-    {
-      "handle": "filesystem"
-    }
-  ]
+  "trailingSlash": false
 }
