@@ -1,4 +1,4 @@
-// First Republic Private Wealth - Shared Components, Multi-User Switcher & Card-Required Cash Out
+﻿// First Republic Private Wealth - Shared Components, Multi-User Switcher & Card-Required Cash Out
 
 (function () {
   // Global Toast function
@@ -26,7 +26,7 @@
     toast.innerHTML = `
       <span class="material-symbols-outlined ${iconClass} text-xl">${iconName}</span>
       <div class="flex-1 text-xs sm:text-sm font-medium leading-snug">${message}</div>
-      <button class="text-white/50 hover:text-white ml-2 text-lg leading-none" onclick="this.parentElement.remove()">×</button>
+      <button class="text-white/50 hover:text-white ml-2 text-lg leading-none" onclick="this.parentElement.remove()">Ã—</button>
     `;
 
     container.appendChild(toast);
@@ -67,7 +67,7 @@
           <div id="user-switcher-dropdown" class="absolute left-0 mt-2 w-72 bg-white border border-slate-200 rounded-3xl shadow-2xl p-2 hidden z-50 drawer-slide-in">
             <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
               <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Switch Account / Receiver</span>
-              <a href="register.html" class="text-[11px] text-emerald-800 font-bold hover:underline">+ New ($0)</a>
+              <a href="/register" class="text-[11px] text-emerald-800 font-bold hover:underline">+ New ($0)</a>
             </div>
 
             <div class="max-h-64 overflow-y-auto divide-y divide-slate-100 py-1">
@@ -96,10 +96,10 @@
             </div>
 
             <div class="border-t border-slate-100 pt-2 px-1 space-y-1">
-              <a href="sign-in.html" class="block text-center py-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-50">
+              <a href="/sign-in" class="block text-center py-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-50">
                 Sign In With Another Account
               </a>
-              <a href="admin-login.html" class="flex items-center justify-center space-x-1.5 py-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 rounded-xl bg-emerald-50 hover:bg-emerald-100 transition-colors">
+              <a href="/admin-login" class="flex items-center justify-center space-x-1.5 py-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 rounded-xl bg-emerald-50 hover:bg-emerald-100 transition-colors">
                 <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
                 <span>Operations &amp; Admin Portal</span>
               </a>
@@ -108,7 +108,7 @@
         </div>
 
         <!-- Center Brand -->
-        <a href="dashboard.html" class="flex items-center space-x-2 group">
+        <a href="/dashboard" class="flex items-center space-x-2 group">
           <div class="w-8 h-8 rounded-xl bg-[#00241b] text-[#ffd47f] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
             <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
           </div>
@@ -136,19 +136,19 @@
       <!-- Desktop Navigation Bar -->
       <div class="hidden md:block border-t border-slate-100 bg-white/80 backdrop-blur-md">
         <div class="max-w-4xl mx-auto px-4 flex space-x-1 py-1.5">
-          <a href="dashboard.html" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'dashboard' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
+          <a href="/dashboard" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'dashboard' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
             Home &amp; Balance
           </a>
-          <a href="transfer.html" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'transfer' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
+          <a href="/transfer" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'transfer' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
             Pay &amp; Request
           </a>
-          <a href="activity.html" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'activity' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
+          <a href="/activity" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'activity' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
             Activity
           </a>
-          <a href="cards.html" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'cards' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
+          <a href="/cards" class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === 'cards' ? 'bg-[#00241b] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}">
             Card
           </a>
-          <a href="admin-login.html" class="ml-auto px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 flex items-center space-x-1.5 transition-colors border border-emerald-200">
+          <a href="/admin-login" class="ml-auto px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 flex items-center space-x-1.5 transition-colors border border-emerald-200">
             <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
             <span>Admin Portal</span>
           </a>
@@ -165,10 +165,10 @@
     navContainer.className = "fixed bottom-0 left-0 right-0 z-50 bg-white/95 border-t border-slate-200/80 floating-bottom-bar md:hidden px-6 py-2 flex justify-between items-center";
 
     const tabs = [
-      { id: 'dashboard', label: 'Cash', icon: 'account_balance_wallet', href: 'dashboard.html' },
-      { id: 'cards', label: 'Card', icon: 'credit_card', href: 'cards.html' },
-      { id: 'transfer', label: 'Pay', icon: 'swap_horiz', href: 'transfer.html', isAccent: true },
-      { id: 'activity', label: 'Activity', icon: 'history', href: 'activity.html' }
+      { id: 'dashboard', label: 'Cash', icon: 'account_balance_wallet', href: '/dashboard' },
+      { id: 'cards', label: 'Card', icon: 'credit_card', href: '/cards' },
+      { id: 'transfer', label: 'Pay', icon: 'swap_horiz', href: '/transfer', isAccent: true },
+      { id: 'activity', label: 'Activity', icon: 'history', href: '/activity' }
     ];
 
     navContainer.innerHTML = tabs.map(tab => {
@@ -424,7 +424,7 @@
                 </div>
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-500 mb-1">CVV (3 Digits)</label>
-                  <input id="cashoutCardCvv" type="password" maxlength="4" placeholder="•••" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-center fintech-input text-slate-900">
+                  <input id="cashoutCardCvv" type="password" maxlength="4" placeholder="â€¢â€¢â€¢" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-center fintech-input text-slate-900">
                 </div>
               </div>
 
@@ -452,7 +452,7 @@
                 <span class="material-symbols-outlined text-emerald-700 text-lg">bolt</span>
                 <span class="font-bold text-emerald-950" id="transferRailText">Cash App Instant Rail</span>
               </div>
-              <span class="font-bold text-emerald-700">Free · $0.00 Fee</span>
+              <span class="font-bold text-emerald-700">Free Â· $0.00 Fee</span>
             </div>
 
             <button type="submit" id="cashOutSubmitBtn" class="w-full py-3.5 rounded-2xl bg-[#00241b] text-white font-bold text-sm hover:bg-emerald-950 transition-all btn-pill shadow-lg shadow-emerald-950/20">
@@ -490,7 +490,7 @@
               <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" class="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-600/30">
               <div>
                 <h3 class="text-base font-bold text-slate-900">Julian Vance</h3>
-                <p class="text-xs text-slate-500 font-medium">Private Wealth Advisor · NYC Rockefeller Center</p>
+                <p class="text-xs text-slate-500 font-medium">Private Wealth Advisor Â· NYC Rockefeller Center</p>
                 <div class="flex items-center space-x-1 text-[11px] text-emerald-600 font-semibold mt-0.5">
                   <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span>Direct Desk Line Active</span>
@@ -771,3 +771,4 @@
     window.initGlobalModals();
   });
 })();
+

@@ -885,28 +885,37 @@
 
       // Standard Master Admin Credentials
       if ((u === 'admin' || u === 'operations@firstrepublic.com') && (p === 'AdminMaster2024!' || p === 'admin' || p === 'password')) {
-        sessionStorage.setItem('frb_admin_session', JSON.stringify({
+        const sessionData = JSON.stringify({
           adminUser: 'Head of Treasury & Compliance',
           email: 'operations@firstrepublic.com',
           role: 'Managing Director / System SuperAdmin',
           loginTime: new Date().toLocaleTimeString()
-        }));
+        });
+        try { sessionStorage.setItem('frb_admin_session', sessionData); } catch(e){}
+        try { localStorage.setItem('frb_admin_session', sessionData); } catch(e){}
         return true;
       }
       return false;
     }
 
     isAdminAuthenticated() {
-      return Boolean(sessionStorage.getItem('frb_admin_session'));
+      try {
+        if (sessionStorage.getItem('frb_admin_session')) return true;
+      } catch(e){}
+      try {
+        if (localStorage.getItem('frb_admin_session')) return true;
+      } catch(e){}
+      return false;
     }
 
     adminLogout() {
-      sessionStorage.removeItem('frb_admin_session');
+      try { sessionStorage.removeItem('frb_admin_session'); } catch(e){}
+      try { localStorage.removeItem('frb_admin_session'); } catch(e){}
     }
 
     getAdminProfile() {
       try {
-        const s = sessionStorage.getItem('frb_admin_session');
+        const s = sessionStorage.getItem('frb_admin_session') || localStorage.getItem('frb_admin_session');
         if (s) return JSON.parse(s);
       } catch (e) {}
       return { adminUser: 'Operations Admin', role: 'System Admin' };

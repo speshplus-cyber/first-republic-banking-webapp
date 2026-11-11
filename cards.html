@@ -30,7 +30,7 @@
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Card &amp; Security</h1>
-        <p class="text-xs text-slate-500 mt-0.5">Visa Infinite® Solid Metal Debit</p>
+        <p class="text-xs text-slate-500 mt-0.5">Visa InfiniteÂ® Solid Metal Debit</p>
       </div>
       <div id="cardStatusBadge" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold shadow-sm">
         <span id="cardStatusDot" class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
@@ -69,11 +69,11 @@
       <!-- Card Number & CVV -->
       <div class="mb-4 relative z-10">
         <div class="text-lg sm:text-xl font-bold font-mono tracking-widest text-white select-all" id="cardDigitsDisplay">
-          •••• •••• •••• 1184
+          â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 1184
         </div>
         <div class="flex items-center space-x-3 mt-1 text-xs text-slate-400">
-          <span>CVV: <strong class="text-white font-mono" id="cardCvvDisplay">•••</strong></span>
-          <span>•</span>
+          <span>CVV: <strong class="text-white font-mono" id="cardCvvDisplay">â€¢â€¢â€¢</strong></span>
+          <span>â€¢</span>
           <span>Exp: <strong class="text-white font-mono">08/28</strong></span>
         </div>
       </div>
@@ -169,7 +169,7 @@
       <div class="space-y-2">
         <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">🏨</div>
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">ðŸ¨</div>
             <div>
               <div class="text-xs font-bold text-slate-900">10% Off Luxury Hotels &amp; Resorts</div>
               <div class="text-[10px] text-slate-400">Four Seasons, Ritz-Carlton, Aman</div>
@@ -180,10 +180,10 @@
 
         <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">☕</div>
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">â˜•</div>
             <div>
               <div class="text-xs font-bold text-slate-900">$5 Off Any Coffee Purchase</div>
-              <div class="text-[10px] text-slate-400">Blue Bottle, Ralph’s, Devoción</div>
+              <div class="text-[10px] text-slate-400">Blue Bottle, Ralphâ€™s, DevociÃ³n</div>
             </div>
           </div>
           <span class="text-xs font-extrabold text-amber-700">$5 OFF</span>
@@ -261,8 +261,8 @@
       const user = window.FRB.state.user;
 
       document.getElementById('cardHolderDisplay').innerText = user.name || 'Alexander M. Vance';
-      document.getElementById('cardDigitsDisplay').innerText = card.masked || '•••• •••• •••• 1184';
-      document.getElementById('cardCvvDisplay').innerText = '•••';
+      document.getElementById('cardDigitsDisplay').innerText = card.masked || 'â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 1184';
+      document.getElementById('cardCvvDisplay').innerText = 'â€¢â€¢â€¢';
 
       // Update modal credentials
       const modalNum = document.getElementById('modalCardNumber');
@@ -336,3 +336,4 @@
   </script>
 </body>
 </html>
+

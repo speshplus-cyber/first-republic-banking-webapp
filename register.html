@@ -22,7 +22,7 @@
 
   <!-- Header -->
   <header class="max-w-md mx-auto w-full py-4 flex items-center justify-between">
-    <a href="sign-in.html" class="flex items-center text-xs font-bold text-slate-600 hover:text-slate-900 space-x-1">
+    <a href="/sign-in" class="flex items-center text-xs font-bold text-slate-600 hover:text-slate-900 space-x-1">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       <span>Back</span>
     </a>
@@ -136,7 +136,7 @@
     <!-- Sign In Link -->
     <div class="text-center mt-6 text-xs text-slate-500">
       Already have an account? 
-      <a href="sign-in.html" class="font-bold text-emerald-800 hover:underline">Log in</a>
+      <a href="/sign-in" class="font-bold text-emerald-800 hover:underline">Log in</a>
     </div>
   </main>
 
@@ -179,7 +179,7 @@
 
       window.showToast(`Account created for ${first}! Initial balance: $0.00`, 'success');
       setTimeout(() => {
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard';
       }, 900);
     }
   </script>

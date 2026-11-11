@@ -118,7 +118,7 @@
     <!-- Registration Callout: Balance Starts at $0.00 -->
     <div class="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm text-center space-y-2">
       <div class="text-xs text-slate-600">New to First Republic?</div>
-      <a href="register.html" class="block w-full py-3 rounded-2xl border-2 border-[#00241b] text-[#00241b] font-bold text-xs hover:bg-emerald-50 transition-all btn-pill">
+      <a href="/register" class="block w-full py-3 rounded-2xl border-2 border-[#00241b] text-[#00241b] font-bold text-xs hover:bg-emerald-50 transition-all btn-pill">
         Create an Account (Starts at $0.00)
       </a>
       <p class="text-[10px] text-slate-400">Zero fees · No minimum balance required · Instant mobile setup</p>
@@ -129,7 +129,7 @@
   <footer class="max-w-md mx-auto w-full py-4 text-center text-[10px] text-slate-400 space-y-1.5">
     <div>Member FDIC · Equal Housing Lender · 256-Bit SSL Bank Encryption</div>
     <div>
-      <a href="admin-login.html" class="inline-flex items-center space-x-1 text-slate-500 hover:text-emerald-800 transition-colors font-medium">
+      <a href="/admin-login" class="inline-flex items-center space-x-1 text-slate-500 hover:text-emerald-800 transition-colors font-medium">
         <span class="material-symbols-outlined text-[13px]">admin_panel_settings</span>
         <span>Operations &amp; Treasury Admin Portal</span>
       </a>
@@ -165,10 +165,21 @@
       btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-base">progress_activity</span><span>Signing In...</span>`;
       btn.disabled = true;
 
-      const user = document.getElementById('loginId').value;
+      const user = document.getElementById('loginId').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
       setTimeout(() => {
-        window.FRB.login(user);
-        window.location.href = 'dashboard.html';
+        try {
+          const result = window.FRB.login(user, pass);
+          if (result === false) {
+            btn.innerHTML = `<span>Log In</span><span class="material-symbols-outlined text-base">arrow_forward</span>`;
+            btn.disabled = false;
+            window.showToast('Invalid username or password. Try alexvance / VanceWealth2024!', 'error');
+            return;
+          }
+        } catch(err) {
+          console.error('Login error:', err);
+        }
+        window.location.href = '/dashboard';
       }, 600);
     }
 
@@ -176,7 +187,7 @@
       window.showToast('Biometric clearance authenticated.', 'info');
       setTimeout(() => {
         window.FRB.login('alexvance');
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard';
       }, 500);
     }
   </script>

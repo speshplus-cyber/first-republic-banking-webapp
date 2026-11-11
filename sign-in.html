@@ -54,7 +54,7 @@
             <span class="material-symbols-outlined text-emerald-700 text-lg">account_circle</span>
             <div>
               <div class="text-xs font-bold text-slate-900">Alexander Vance</div>
-              <div class="text-[10px] text-slate-500">$alexvance · Sender</div>
+              <div class="text-[10px] text-slate-500">$alexvance Â· Sender</div>
             </div>
           </div>
           <button onclick="fillUser('alexvance')" class="px-2.5 py-1 rounded-xl bg-[#00241b] text-white text-[11px] font-bold hover:bg-emerald-950 btn-pill">
@@ -67,7 +67,7 @@
             <span class="material-symbols-outlined text-slate-600 text-lg">account_circle</span>
             <div>
               <div class="text-xs font-bold text-slate-900">Julian Vance</div>
-              <div class="text-[10px] text-slate-500">$julianvance · Receiver</div>
+              <div class="text-[10px] text-slate-500">$julianvance Â· Receiver</div>
             </div>
           </div>
           <button onclick="fillUser('julianvance')" class="px-2.5 py-1 rounded-xl bg-slate-800 text-white text-[11px] font-bold hover:bg-slate-900 btn-pill">
@@ -94,7 +94,7 @@
           </div>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-lg">lock</span>
-            <input id="loginPassword" type="password" placeholder="••••••••••••" required class="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold fintech-input" value="VanceWealth2024!">
+            <input id="loginPassword" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required class="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold fintech-input" value="VanceWealth2024!">
             <button type="button" onclick="togglePasswordVisibility()" class="material-symbols-outlined absolute right-3 top-3 text-slate-400 hover:text-slate-700 text-lg" id="pwdToggleIcon">
               visibility
             </button>
@@ -118,18 +118,18 @@
     <!-- Registration Callout: Balance Starts at $0.00 -->
     <div class="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm text-center space-y-2">
       <div class="text-xs text-slate-600">New to First Republic?</div>
-      <a href="register.html" class="block w-full py-3 rounded-2xl border-2 border-[#00241b] text-[#00241b] font-bold text-xs hover:bg-emerald-50 transition-all btn-pill">
+      <a href="/register" class="block w-full py-3 rounded-2xl border-2 border-[#00241b] text-[#00241b] font-bold text-xs hover:bg-emerald-50 transition-all btn-pill">
         Create an Account (Starts at $0.00)
       </a>
-      <p class="text-[10px] text-slate-400">Zero fees · No minimum balance required · Instant mobile setup</p>
+      <p class="text-[10px] text-slate-400">Zero fees Â· No minimum balance required Â· Instant mobile setup</p>
     </div>
 
   </main>
 
   <footer class="max-w-md mx-auto w-full py-4 text-center text-[10px] text-slate-400 space-y-1.5">
-    <div>Member FDIC · Equal Housing Lender · 256-Bit SSL Bank Encryption</div>
+    <div>Member FDIC Â· Equal Housing Lender Â· 256-Bit SSL Bank Encryption</div>
     <div>
-      <a href="admin-login.html" class="inline-flex items-center space-x-1 text-slate-500 hover:text-emerald-800 transition-colors font-medium">
+      <a href="/admin-login" class="inline-flex items-center space-x-1 text-slate-500 hover:text-emerald-800 transition-colors font-medium">
         <span class="material-symbols-outlined text-[13px]">admin_panel_settings</span>
         <span>Operations &amp; Treasury Admin Portal</span>
       </a>
@@ -168,7 +168,7 @@
       const user = document.getElementById('loginId').value;
       setTimeout(() => {
         window.FRB.login(user);
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard';
       }, 600);
     }
 
@@ -176,9 +176,10 @@
       window.showToast('Biometric clearance authenticated.', 'info');
       setTimeout(() => {
         window.FRB.login('alexvance');
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard';
       }, 500);
     }
   </script>
 </body>
 </html>
+
