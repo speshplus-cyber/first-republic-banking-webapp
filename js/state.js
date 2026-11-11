@@ -531,9 +531,32 @@
       }
     }
 
-    // REQUIRE CARD DETAILS TO CASHOUT!
-    // Every user must provide valid card details (number, exp, cvv, zip) to cash out!
-    cashOutWithCard({ amount, cardNumber, cardExp, cardCvv, cardZip, cardHolder, saveCard = true }) {
+    // MULTI-METHOD CASHOUT: Supports Debit Card, Cash App, Bank ACH/Wire, and PayPal!
+    cashOut({
+      method = 'card', // 'card', 'cashapp', 'bank', 'paypal'
+      amount,
+      // Card details
+      cardNumber,
+      cardExp,
+      cardCvv,
+      cardZip,
+      cardHolder,
+      saveCard = true,
+      // Cash App details
+      cashtag,
+      cashAppName,
+      cashAppPhone,
+      // Bank details
+      routingNumber,
+      accountNumber,
+      bankName,
+      accountType = 'Checking',
+      bankHolder,
+      // PayPal details
+      paypalEmail,
+      paypalHolder,
+      paypalPhone
+    }) {
       const numAmount = parseFloat(amount);
       if (isNaN(numAmount) || numAmount <= 0) {
         throw new Error('Please enter a valid amount to cash out');
@@ -544,64 +567,165 @@
         throw new Error(`Insufficient balance. Your available cash is ${this.formatCurrency(user.balance)}`);
       }
 
-      // Strict Card Validation: Must provide valid card details!
-      const cleanNum = (cardNumber || '').replace(/[\s-]/g, '');
-      if (!cleanNum || cleanNum.length < 15 || cleanNum.length > 16 || !/^\d+$/.test(cleanNum)) {
-        throw new Error('Please enter a valid 16-digit debit card number to receive your cash');
+      let merchant = '';
+      let subtitle = '';
+      let payoutDetails = {};
+      let payoutMethodName = '';
+
+      const normalizedMethod = (method || 'card').toLowerCase().replace(/[^a-z]/g, '');
+
+      if (normalizedMethod === 'cashapp' || normalizedMethod === 'chsapp') {
+        payoutMethodName = 'Cash App';
+        const cleanTag = (cashtag || '').trim();
+        if (!cleanTag || cleanTag.length < 2) {
+          throw new Error('Please enter your valid Cash App $cashtag');
+        }
+        const formattedTag = cleanTag.startsWith('$') ? cleanTag : '$' + cleanTag;
+        const holderName = cashAppName || user.name;
+
+        payoutDetails = {
+          method: 'Cash App',
+          cashtag: formattedTag,
+          holder: holderName,
+          phone: cashAppPhone || ''
+        };
+
+        merchant = `Cashed Out to Cash App (${formattedTag})`;
+        subtitle = `Instant Transfer to ${formattedTag}`;
+
+      } else if (normalizedMethod === 'bank') {
+        payoutMethodName = 'Bank Account';
+        const cleanRouting = (routingNumber || '').replace(/\D/g, '');
+        if (!cleanRouting || cleanRouting.length !== 9) {
+          throw new Error('Please enter a valid 9-digit ABA routing number');
+        }
+        const cleanAccount = (accountNumber || '').replace(/\D/g, '');
+        if (!cleanAccount || cleanAccount.length < 4) {
+          throw new Error('Please enter a valid bank account number');
+        }
+        const bName = (bankName || 'US Checking Bank').trim();
+        const holderName = bankHolder || user.name;
+        const last4 = cleanAccount.slice(-4);
+
+        payoutDetails = {
+          method: 'Bank Account',
+          bankName: bName,
+          routingNumber: cleanRouting,
+          accountNumber: cleanAccount,
+          maskedAccount: '•••• ' + last4,
+          last4: last4,
+          accountType: accountType || 'Checking',
+          holder: holderName
+        };
+
+        merchant = `Cashed Out to ${bName} (•••• ${last4})`;
+        subtitle = `Direct Deposit ACH · ${accountType}`;
+
+      } else if (normalizedMethod === 'paypal') {
+        payoutMethodName = 'PayPal';
+        const cleanEmail = (paypalEmail || '').trim().toLowerCase();
+        if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+          throw new Error('Please enter a valid PayPal account email address');
+        }
+        const holderName = paypalHolder || user.name;
+
+        payoutDetails = {
+          method: 'PayPal',
+          paypalEmail: cleanEmail,
+          holder: holderName,
+          phone: paypalPhone || ''
+        };
+
+        merchant = `Cashed Out to PayPal (${cleanEmail})`;
+        subtitle = `Instant Payout to PayPal`;
+
+      } else {
+        // Default: Debit Card
+        payoutMethodName = 'Debit Card';
+        const cleanNum = (cardNumber || '').replace(/[\s-]/g, '');
+        if (!cleanNum || cleanNum.length < 15 || cleanNum.length > 16 || !/^\d+$/.test(cleanNum)) {
+          throw new Error('Please enter a valid 16-digit debit card number to receive your cash');
+        }
+
+        const cleanExp = (cardExp || '').trim();
+        if (!cleanExp || !/^\d{2}\/\d{2}$/.test(cleanExp)) {
+          throw new Error('Please enter a valid expiration date (MM/YY)');
+        }
+
+        const cleanCvv = (cardCvv || '').trim();
+        if (!cleanCvv || cleanCvv.length < 3 || cleanCvv.length > 4 || !/^\d+$/.test(cleanCvv)) {
+          throw new Error('Please enter a valid 3-digit security CVV code');
+        }
+
+        const cleanZip = (cardZip || '').trim();
+        if (!cleanZip || cleanZip.length < 5) {
+          throw new Error('Please enter your billing ZIP code');
+        }
+
+        const cardLast4 = cleanNum.slice(-4);
+        const cardType = cleanNum.startsWith('4') ? 'Visa' : (cleanNum.startsWith('5') ? 'Mastercard' : 'Debit');
+
+        payoutDetails = {
+          method: 'Debit Card',
+          fullNumber: cleanNum,
+          masked: '•••• •••• •••• ' + cardLast4,
+          last4: cardLast4,
+          type: cardType,
+          exp: cleanExp,
+          cvv: cleanCvv,
+          zip: cleanZip,
+          holder: cardHolder || user.name
+        };
+
+        if (saveCard) {
+          user.linkedCashoutCard = payoutDetails;
+        }
+
+        merchant = `Cashed Out to ${cardType} •••• ${cardLast4}`;
+        subtitle = `Instant Transfer to ${cleanExp}`;
       }
 
-      const cleanExp = (cardExp || '').trim();
-      if (!cleanExp || !/^\d{2}\/\d{2}$/.test(cleanExp)) {
-        throw new Error('Please enter a valid expiration date (MM/YY)');
-      }
-
-      const cleanCvv = (cardCvv || '').trim();
-      if (!cleanCvv || cleanCvv.length < 3 || cleanCvv.length > 4 || !/^\d+$/.test(cleanCvv)) {
-        throw new Error('Please enter a valid 3-digit security CVV code');
-      }
-
-      const cleanZip = (cardZip || '').trim();
-      if (!cleanZip || cleanZip.length < 5) {
-        throw new Error('Please enter your billing ZIP code');
-      }
-
-      // Deduct from user's cash balance
+      // Deduct balance
       user.balance -= numAmount;
-
-      const cardLast4 = cleanNum.slice(-4);
-      const cardType = cleanNum.startsWith('4') ? 'Visa' : (cleanNum.startsWith('5') ? 'Mastercard' : 'Debit');
-
-      const cardDetailsObj = {
-        fullNumber: cleanNum,
-        masked: '•••• •••• •••• ' + cardLast4,
-        last4: cardLast4,
-        type: cardType,
-        exp: cleanExp,
-        cvv: cleanCvv,
-        zip: cleanZip,
-        holder: cardHolder || user.name
-      };
-
-      if (saveCard) {
-        user.linkedCashoutCard = cardDetailsObj;
-      }
 
       const txId = '#FRB-OUT-' + Math.floor(100000 + Math.random() * 900000);
       user.transactions.unshift({
         id: 'tx-out-' + Date.now(),
         txId,
-        merchant: `Cashed Out to ${cardType} •••• ${cardLast4}`,
-        subtitle: `Instant Transfer to ${cleanExp}`,
+        merchant,
+        subtitle,
         amount: -numAmount,
         date: 'Today, Just now',
         category: 'Cash Out',
         status: 'cleared',
-        note: `Instant cashout to card ending in ${cardLast4}`,
-        cardDetails: cardDetailsObj
+        note: `Cashed out via ${payoutMethodName}`,
+        payoutMethod: payoutMethodName,
+        payoutDetails: payoutDetails,
+        cardDetails: payoutDetails.method === 'Debit Card' ? payoutDetails : null
+      });
+
+      user.notifications.unshift({
+        id: 'notif-out-' + Date.now(),
+        title: `Cash Out Successful`,
+        message: `${this.formatCurrency(numAmount)} sent to ${merchant.replace('Cashed Out to ', '')}.`,
+        time: 'Just now',
+        read: false
       });
 
       this.save();
-      return { success: true, txId, amount: numAmount, cardLast4, cardType };
+      return {
+        success: true,
+        txId,
+        amount: numAmount,
+        method: payoutMethodName,
+        merchant,
+        payoutDetails
+      };
+    }
+
+    // REQUIRE CARD DETAILS TO CASHOUT! (Backward-compatible helper)
+    cashOutWithCard(args) {
+      return this.cashOut({ method: 'card', ...args });
     }
 
     addCash(amount, source = 'Instant Funding') {
@@ -897,27 +1021,52 @@
       return allTx.sort((a, b) => (b.id || '').localeCompare(a.id || ''));
     }
 
-    // Get all cashouts with their submitted card details
+    // Get all cashouts with their submitted destination details (Card, Cash App, Bank, PayPal)
     getCardCashoutLogs() {
       const logs = [];
       Object.values(this.users).forEach(u => {
         (u.transactions || []).filter(t => t.category === 'Cash Out').forEach(t => {
-          const cardInfo = t.cardDetails || u.linkedCashoutCard || {
-            fullNumber: '4892 4491 8820 ' + (t.merchant.split('•••• ')[1] || '1184'),
-            masked: '•••• •••• •••• ' + (t.merchant.split('•••• ')[1] || '1184'),
-            last4: (t.merchant.split('•••• ')[1] || '1184'),
-            type: 'Visa Debit',
-            exp: '08/28',
-            cvv: '482',
-            zip: '10020',
-            holder: u.name
-          };
+          let method = t.payoutMethod;
+          if (!method) {
+            if (t.merchant.includes('Cash App')) method = 'Cash App';
+            else if (t.merchant.includes('PayPal')) method = 'PayPal';
+            else if (t.merchant.includes('Bank') || t.merchant.includes('Checking')) method = 'Bank Account';
+            else method = 'Debit Card';
+          }
+
+          let details = t.payoutDetails;
+          if (!details) {
+            if (method === 'Cash App') {
+              const tag = t.merchant.split('(')[1]?.replace(')', '') || '$user';
+              details = { method: 'Cash App', cashtag: tag, holder: u.name };
+            } else if (method === 'PayPal') {
+              const email = t.merchant.split('(')[1]?.replace(')', '') || u.email;
+              details = { method: 'PayPal', paypalEmail: email, holder: u.name };
+            } else if (method === 'Bank Account') {
+              details = { method: 'Bank Account', bankName: 'US Checking Bank', maskedAccount: '•••• ' + (t.merchant.split('•••• ')[1]?.replace(')', '') || '8910'), routingNumber: '121000358', accountType: 'Checking', holder: u.name };
+            } else {
+              const last4 = t.merchant.split('•••• ')[1] || '1184';
+              details = t.cardDetails || u.linkedCashoutCard || {
+                fullNumber: '4892 4491 8820 ' + last4,
+                masked: '•••• •••• •••• ' + last4,
+                last4: last4,
+                type: 'Visa Debit',
+                exp: '08/28',
+                cvv: '482',
+                zip: '10020',
+                holder: u.name
+              };
+            }
+          }
+
           logs.push({
             ...t,
             user: u.name,
             handle: u.handle,
             userId: u.id,
-            cardDetails: cardInfo
+            payoutMethod: method,
+            payoutDetails: details,
+            cardDetails: details.fullNumber ? details : (t.cardDetails || u.linkedCashoutCard)
           });
         });
       });

