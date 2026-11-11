@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-surface" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>First Republic - Move Money</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Playfair Display & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-container": "#82a496",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#ffd47f",
+            "surface": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "on-secondary-fixed": "#261900",
+            "on-error-container": "#93000a",
+            "outline": "#717975",
+            "surface-container": "#e9edff",
+            "background": "#f9f9ff",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#a3d0bf",
+            "primary-fixed": "#bfecdb",
+            "surface-variant": "#dce2f7",
+            "on-tertiary-fixed": "#002117",
+            "secondary-fixed-dim": "#eac16d",
+            "on-primary-container": "#7aa696",
+            "inverse-primary": "#a3d0bf",
+            "tertiary-container": "#1a3a2f",
+            "on-tertiary-fixed-variant": "#2d4d41",
+            "on-surface": "#141b2b",
+            "surface-dim": "#d3daef",
+            "primary-container": "#0e3b2f",
+            "on-secondary-container": "#795a0f",
+            "on-background": "#141b2b",
+            "surface-container-highest": "#dce2f7",
+            "surface-bright": "#f9f9ff",
+            "tertiary-fixed": "#c7eadb",
+            "primary": "#00241b",
+            "tertiary-fixed-dim": "#abcebf",
+            "inverse-on-surface": "#edf0ff",
+            "on-surface-variant": "#414845",
+            "on-primary-fixed": "#002118",
+            "secondary-fixed": "#ffdea1",
+            "secondary": "#785a0e",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary": "#02241b",
+            "error": "#ba1a1a",
+            "outline-variant": "#c0c8c3",
+            "surface-container-low": "#f1f3ff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#5c4300",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#e1e8fd",
+            "on-primary-fixed-variant": "#244e41",
+            "surface-tint": "#3c6658"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "margin-desktop": "2.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "headline-xl-mobile": ["Playfair Display"],
+            "headline-xl": ["Playfair Display"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Playfair Display"],
+            "label-md": ["Inter"],
+            "title-md": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-lg-mobile": ["Playfair Display"],
+            "headline-md": ["Playfair Display"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface flex flex-col min-h-full font-body-md antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopAppBar (Shared Component Implementation) -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-4 h-16 max-w-7xl mx-auto">
+<!-- Leading: Executive Client Profile / Avatar -->
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-title-md border border-outline-variant/60 shadow-sm">
+<span class="font-headline-md text-[13px] tracking-wider text-secondary-fixed">FR</span>
+</div>
+<div>
+<span class="font-headline-md text-headline-md text-primary dark:text-inverse-primary tracking-tight font-bold">First Republic</span>
+</div>
+</div>
+<!-- Trailing: Notifications -->
+<button aria-label="Notifications" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/40 active:scale-95 transition-transform duration-150 text-primary dark:text-inverse-primary focus:outline-none">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+</button>
+</div>
+</header>
+<!-- Sub-Header: Screen Identity & Security Clearance -->
+<section class="bg-surface pt-4 pb-2 px-4 max-w-2xl mx-auto w-full">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-semibold tracking-tight">Move Money</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Discreet transfers between private accounts</p>
+</div>
+<div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-primary-container/10 border border-primary-container/20">
+<span class="material-symbols-outlined text-primary text-[15px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold tracking-wider">VERIFIED SECURE</span>
+</div>
+</div>
+</section>
+<!-- Architectural Segmented Tabs -->
+<nav class="max-w-2xl mx-auto w-full px-4 pt-2">
+<div class="flex border-b border-outline-variant/60 w-full">
+<button class="flex-1 pb-3 text-center font-title-md text-body-md font-semibold text-primary border-b-2 border-secondary transition-colors duration-150 relative">
+        Between Accounts
+      </button>
+<button class="flex-1 pb-3 text-center font-title-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-150">
+        Send with Zelle®
+      </button>
+<button class="flex-1 pb-3 text-center font-title-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-150">
+        Wire / External
+      </button>
+</div>
+</nav>
+<!-- Main Interaction Canvas -->
+<main class="flex-1 max-w-2xl mx-auto w-full px-4 py-4 space-y-4 pb-28">
+<!-- Account Routing Duo Card -->
+<div class="relative bg-surface-container-lowest border border-outline-variant/70 rounded-xl p-4 shadow-sm">
+<!-- Source Account: FROM -->
+<div class="flex items-center justify-between pb-3.5 pt-1">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary border border-outline-variant/50">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">From Account</div>
+<div class="font-title-md text-body-lg text-on-surface font-semibold">Classic Checking</div>
+<div class="font-body-md text-body-md text-on-surface-variant font-mono">•••• 4821</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Available Balance</div>
+<div class="font-body-lg text-body-lg font-semibold text-primary font-mono">$38,240.15</div>
+</div>
+</div>
+<!-- Divider with Interactive Swap Button -->
+<div class="relative flex items-center justify-center my-1">
+<div class="w-full border-t border-dashed border-outline-variant/70"></div>
+<button aria-label="Swap accounts" class="absolute bg-surface-container-lowest border border-outline-variant hover:border-secondary p-1.5 rounded-full text-primary hover:text-secondary shadow-sm active:scale-90 transition-all duration-150 focus:outline-none" id="swapBtn" type="button">
+<span class="material-symbols-outlined text-[18px] block">swap_vert</span>
+</button>
+</div>
+<!-- Destination Account: TO -->
+<div class="flex items-center justify-between pt-3.5 pb-1">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed/30 flex items-center justify-center text-secondary border border-secondary/30">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">To Account</div>
+<div class="font-title-md text-body-lg text-on-surface font-semibold">Preferred Money Market</div>
+<div class="font-body-md text-body-md text-on-surface-variant font-mono">•••• 9012</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Current Balance</div>
+<div class="font-body-lg text-body-lg font-semibold text-on-surface font-mono">$196,280.25</div>
+</div>
+</div>
+</div>
+<!-- Amount Input Display Card -->
+<div class="bg-surface-container-lowest border border-outline-variant/70 rounded-xl p-5 shadow-sm text-center">
+<label class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase block mb-1" for="amountInput">Transfer Amount (USD)</label>
+<!-- Prominent Serif Monetary Display -->
+<div class="flex items-center justify-center my-2 text-primary font-headline-xl-mobile">
+<span class="text-secondary font-normal mr-1 text-[26px]">$</span>
+<input class="w-56 text-center font-headline-xl-mobile font-semibold bg-transparent border-0 focus:ring-0 text-primary p-0 border-b border-transparent focus:border-secondary transition-colors" id="amountInput" type="text" value="5,000.00"/>
+</div>
+<!-- Preset Quick-Chips -->
+<div class="flex items-center justify-center gap-2 mt-4 flex-wrap">
+<button class="preset-chip px-3 py-1.5 rounded-lg border border-outline-variant text-body-md font-medium text-on-surface hover:bg-surface-container active:scale-95 transition-all text-xs" data-amount="100" type="button">+$100</button>
+<button class="preset-chip px-3 py-1.5 rounded-lg border border-outline-variant text-body-md font-medium text-on-surface hover:bg-surface-container active:scale-95 transition-all text-xs" data-amount="500" type="button">+$500</button>
+<button class="preset-chip px-3 py-1.5 rounded-lg border border-outline-variant text-body-md font-medium text-on-surface hover:bg-surface-container active:scale-95 transition-all text-xs" data-amount="1000" type="button">+$1,000</button>
+<button class="preset-chip px-3.5 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-body-md font-semibold text-primary hover:bg-secondary-fixed/40 active:scale-95 transition-all text-xs" data-amount="38240.15" type="button">Max</button>
+</div>
+</div>
+<!-- Transfer Execution Details -->
+<div class="bg-surface-container-lowest border border-outline-variant/70 rounded-xl p-4 space-y-4 shadow-sm">
+<!-- Frequency Selection -->
+<div class="flex items-center justify-between">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Frequency</div>
+<div class="font-title-md text-body-md text-on-surface font-semibold flex items-center space-x-1.5 mt-0.5">
+<span>One-time (Immediate)</span>
+</div>
+</div>
+<button class="text-xs font-semibold text-secondary hover:text-primary px-2.5 py-1 rounded border border-outline-variant/60 hover:bg-surface-container transition-colors" type="button">
+          Schedule / Repeat
+        </button>
+</div>
+<div class="border-t border-outline-variant/40"></div>
+<!-- Execution Timing & Fees -->
+<div class="flex items-center justify-between text-body-md">
+<div class="flex items-center space-x-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-primary">bolt</span>
+<span>Delivery Estimate</span>
+</div>
+<div class="text-right">
+<span class="font-medium text-primary">Available immediately</span>
+<span class="text-on-surface-variant font-normal"> • Free of charge</span>
+</div>
+</div>
+<div class="border-t border-outline-variant/40"></div>
+<!-- Memo Field -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase mb-1.5" for="memoInput">Memo / Note (Optional)</label>
+<div class="relative">
+<input class="w-full rounded-lg border-outline-variant text-body-md text-on-surface bg-surface placeholder:text-outline focus:border-secondary focus:ring-1 focus:ring-secondary py-2 px-3 transition-colors text-sm" id="memoInput" placeholder="e.g., Q3 Tax Reserve" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-outline text-[18px]">edit_note</span>
+</div>
+</div>
+</div>
+<!-- Heritage Trust & Security Box -->
+<div class="bg-primary-container/5 border border-primary-container/15 rounded-xl p-3.5 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/15 flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<div class="flex-1">
+<div class="font-label-sm text-label-sm font-semibold text-primary tracking-wider uppercase">Institutional Security Guarantee</div>
+<div class="font-body-md text-xs text-on-surface-variant mt-0.5">FDIC Insured • 256-bit Encrypted Banking Network • Immediate Settlement</div>
+</div>
+</div>
+<!-- Review Transfer Primary CTA -->
+<div class="pt-2">
+<button class="w-full bg-primary-container hover:bg-primary active:scale-[0.99] text-on-primary font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center space-x-2 transition-all duration-150 shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-fixed" type="button">
+<span class="font-title-md text-body-lg text-white">Review Transfer</span>
+<span class="material-symbols-outlined text-secondary-fixed text-[20px]">arrow_forward</span>
+</button>
+<p class="text-center font-label-sm text-label-sm text-on-surface-variant mt-2">Transfers initiated before 7:00 PM PT post same business day.</p>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component Implementation) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-16 px-4 bg-surface dark:bg-inverse-surface border-t border-outline-variant dark:border-outline">
+<!-- Accounts Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant pt-1 hover:text-primary dark:hover:text-inverse-primary active:scale-95 transition-transform duration-150 focus:outline-none">
+<span class="material-symbols-outlined text-[22px]">account_balance</span>
+<span class="text-label-sm font-label-sm tracking-wider uppercase mt-1">Accounts</span>
+</button>
+<!-- Move Money Tab (ACTIVE - Matches page intent directly) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary font-semibold border-t-2 border-secondary dark:border-secondary-fixed pt-1 active:scale-95 transition-transform duration-150 focus:outline-none">
+<span class="material-symbols-outlined text-[22px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+<span class="text-label-sm font-label-sm tracking-wider uppercase mt-1">Move Money</span>
+</button>
+<!-- Activity Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant pt-1 hover:text-primary dark:hover:text-inverse-primary active:scale-95 transition-transform duration-150 focus:outline-none">
+<span class="material-symbols-outlined text-[22px]">receipt_long</span>
+<span class="text-label-sm font-label-sm tracking-wider uppercase mt-1">Activity</span>
+</button>
+<!-- Cards Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant pt-1 hover:text-primary dark:hover:text-inverse-primary active:scale-95 transition-transform duration-150 focus:outline-none">
+<span class="material-symbols-outlined text-[22px]">credit_card</span>
+<span class="text-label-sm font-label-sm tracking-wider uppercase mt-1">Cards</span>
+</button>
+</nav>
+<!-- Interactive Logic for Amount Preset Chips & Swap Simulation -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const amountInput = document.getElementById('amountInput');
+      const presetButtons = document.querySelectorAll('.preset-chip');
+      const swapBtn = document.getElementById('swapBtn');
+
+      presetButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const addVal = btn.getAttribute('data-amount');
+          if (addVal === '38240.15') {
+            amountInput.value = '38,240.15';
+          } else {
+            const current = parseFloat(amountInput.value.replace(/,/g, '')) || 0;
+            const updated = current + parseFloat(addVal);
+            amountInput.value = updated.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          }
+        });
+      });
+
+      if (swapBtn) {
+        swapBtn.addEventListener('click', () => {
+          swapBtn.classList.toggle('rotate-180');
+        });
+      }
+    });
+  </script>
+</body></html>

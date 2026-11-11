@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>First Republic Bank - Card Management &amp; Security</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-container": "#82a496",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#ffd47f",
+            "surface": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "on-secondary-fixed": "#261900",
+            "on-error-container": "#93000a",
+            "outline": "#717975",
+            "surface-container": "#e9edff",
+            "background": "#f9f9ff",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#a3d0bf",
+            "primary-fixed": "#bfecdb",
+            "surface-variant": "#dce2f7",
+            "on-tertiary-fixed": "#002117",
+            "secondary-fixed-dim": "#eac16d",
+            "on-primary-container": "#7aa696",
+            "inverse-primary": "#a3d0bf",
+            "tertiary-container": "#1a3a2f",
+            "on-tertiary-fixed-variant": "#2d4d41",
+            "on-surface": "#141b2b",
+            "surface-dim": "#d3daef",
+            "primary-container": "#0e3b2f",
+            "on-secondary-container": "#795a0f",
+            "on-background": "#141b2b",
+            "surface-container-highest": "#dce2f7",
+            "surface-bright": "#f9f9ff",
+            "tertiary-fixed": "#c7eadb",
+            "primary": "#00241b",
+            "tertiary-fixed-dim": "#abcebf",
+            "inverse-on-surface": "#edf0ff",
+            "on-surface-variant": "#414845",
+            "on-primary-fixed": "#002118",
+            "secondary-fixed": "#ffdea1",
+            "secondary": "#785a0e",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary": "#02241b",
+            "error": "#ba1a1a",
+            "outline-variant": "#c0c8c3",
+            "surface-container-low": "#f1f3ff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#5c4300",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#e1e8fd",
+            "on-primary-fixed-variant": "#244e41",
+            "surface-tint": "#3c6658"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "margin-desktop": "2.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "headline-xl-mobile": ["Playfair Display"],
+            "headline-xl": ["Playfair Display"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Playfair Display"],
+            "label-md": ["Inter"],
+            "title-md": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-lg-mobile": ["Playfair Display"],
+            "headline-md": ["Playfair Display"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .metal-shimmer {
+      background: linear-gradient(135deg, rgba(200, 162, 82, 0.28) 0%, rgba(14, 59, 47, 0) 45%, rgba(200, 162, 82, 0.15) 100%);
+    }
+    .chip-gold {
+      background: linear-gradient(135deg, #ECC880 0%, #D4A853 50%, #B88934 100%);
+    }
+    .foil-gold {
+      color: #dfba6d;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed pb-24">
+<!-- Top Navigation Anchor (Shared Component: TopAppBar with Card Management context) -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-4 h-16 max-w-7xl mx-auto">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-surface-container-lowest flex items-center justify-center font-headline-md text-label-md font-semibold ring-1 ring-secondary/40 shadow-sm">
+          FR
+        </div>
+<div>
+<span class="font-headline-md text-headline-md text-primary tracking-tight font-bold">First Republic</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Private Wealth Client</span>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<button aria-label="Security and alerts" class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:text-primary transition-colors duration-150 active:scale-95">
+<span class="material-symbols-outlined text-[22px]">verified_user</span>
+</button>
+<button aria-label="Notifications" class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:text-primary transition-colors duration-150 active:scale-95 relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary ring-2 ring-surface"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Main Canvas -->
+<main class="max-w-2xl mx-auto px-4 pt-3 pb-8 space-y-6">
+<!-- Header Context & Status Badge -->
+<div class="flex items-center justify-between">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary font-semibold tracking-tight">Card Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Primary Visa Infinite Metal Debit</p>
+</div>
+<div class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-container/10 border border-outline-variant/60 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary mr-2 animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase font-medium">Active &amp; Protected</span>
+</div>
+</div>
+<!-- Luxury Metal Debit Card Visualizer Bento Card -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#0E3B2F] via-[#092B21] to-[#041611] text-surface-container-lowest p-6 shadow-xl border border-secondary/30">
+<!-- Metallic Foil Sheen Overlay -->
+<div class="metal-shimmer absolute inset-0 pointer-events-none"></div>
+<div class="absolute -top-24 -right-24 w-60 h-60 rounded-full bg-secondary-container/10 blur-3xl pointer-events-none"></div>
+<!-- Card Top Row: Bank Brand + Contactless -->
+<div class="relative z-10 flex items-start justify-between">
+<div>
+<span class="font-headline-md text-headline-md tracking-wider font-semibold foil-gold block">First Republic</span>
+<span class="font-label-sm text-label-sm text-secondary-fixed uppercase tracking-widest text-[9px]">Private Client</span>
+</div>
+<div class="flex items-center space-x-2 text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[24px]" style="transform: rotate(90deg);">contactless</span>
+<span class="font-label-sm text-label-sm font-semibold tracking-wider px-1.5 py-0.5 rounded border border-secondary/40 text-[10px]">METAL</span>
+</div>
+</div>
+<!-- Chip & Security Hologram Row -->
+<div class="relative z-10 my-6 flex items-center justify-between">
+<!-- Realistic Metallic EMV Chip -->
+<div class="w-12 h-9 rounded-md chip-gold p-0.5 shadow-inner border border-secondary-fixed/50 relative overflow-hidden flex flex-col justify-around">
+<div class="w-full h-px bg-[#7A5A0F]/50"></div>
+<div class="w-full h-px bg-[#7A5A0F]/50"></div>
+<div class="w-3/4 mx-auto h-3 rounded-sm border border-[#7A5A0F]/40"></div>
+<div class="w-full h-px bg-[#7A5A0F]/50"></div>
+</div>
+<!-- Private Client Monogram Crest -->
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider block opacity-75">Valued Client Since</span>
+<span class="font-body-md text-body-md text-surface-bright font-medium tracking-wide">2014</span>
+</div>
+</div>
+<!-- Card Number & Masked State -->
+<div class="relative z-10 mb-5">
+<div class="font-headline-md text-headline-md tracking-widest text-surface-container-lowest font-medium flex items-center space-x-3 select-all">
+<span class="tracking-[0.22em]" id="card-digits">•••• •••• •••• 1184</span>
+</div>
+<div class="flex items-center space-x-3 mt-1">
+<span class="font-label-sm text-label-sm text-secondary-fixed uppercase">Security Code (CVV):</span>
+<span class="font-body-md text-body-md text-surface-bright font-mono tracking-wider" id="cvv-digits">•••</span>
+</div>
+</div>
+<!-- Cardholder Name, Expiry, and Brand Badge -->
+<div class="relative z-10 flex items-end justify-between border-t border-white/10 pt-3">
+<div>
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed text-[10px] tracking-wider block">Cardholder</span>
+<span class="font-title-md text-title-md font-semibold tracking-wider text-surface-bright foil-gold uppercase">Alexander M. Vance</span>
+</div>
+<div class="text-center px-3">
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed text-[10px] tracking-wider block">Expires</span>
+<span class="font-body-md text-body-md font-medium text-surface-bright font-mono">08/28</span>
+</div>
+<div class="text-right">
+<span class="font-headline-md text-headline-md italic font-bold tracking-tight text-white block">VISA</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-secondary-fixed text-[9px] font-semibold">Infinite</span>
+</div>
+</div>
+</div>
+<!-- Quick Card Interactive Controls (Reveal Details & Apple Wallet) -->
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-surface-container-lowest border border-outline-variant hover:bg-surface-container transition-all text-primary active:scale-[0.98]" id="toggle-details-btn" onclick="toggleCardVisibility()">
+<span class="material-symbols-outlined text-[20px]" id="eye-icon">visibility</span>
+<span class="font-label-md text-label-md font-semibold" id="eye-label">View Card Details</span>
+</button>
+<button class="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-inverse-surface text-on-tertiary hover:opacity-95 transition-all active:scale-[0.98] shadow-sm">
+<span class="material-symbols-outlined text-[20px]">wallet</span>
+<span class="font-label-md text-label-md font-semibold tracking-tight">Add to Apple Wallet</span>
+</button>
+</div>
+<!-- Instant Security Controls (Architectural Card) -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant/70 p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between border-b border-surface-variant/40 pb-3">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-primary font-semibold">Instant Security Controls</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs">Real-time point-of-sale authorizations</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-primary uppercase font-semibold tracking-wider">Zero-Delay</span>
+</div>
+<!-- Lock Card Switch -->
+<div class="flex items-center justify-between py-1">
+<div class="pr-4">
+<div class="flex items-center space-x-2">
+<label class="font-title-md text-body-lg text-on-surface font-semibold cursor-pointer" for="lock-card-toggle">Lock Card</label>
+<span class="font-label-sm text-label-sm bg-error-container text-on-error-container px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Freeze</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs mt-0.5">Instantly stop all new physical &amp; digital authorizations</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" id="lock-card-toggle" onchange="handleCardFreeze(this)" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-error"></div>
+</label>
+</div>
+<div class="h-px bg-surface-variant/50"></div>
+<!-- International Transactions -->
+<div class="flex items-center justify-between py-1">
+<div class="pr-4">
+<div class="flex items-center space-x-1.5">
+<label class="font-title-md text-body-lg text-on-surface font-semibold cursor-pointer" for="intl-toggle">International Transactions</label>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs mt-0.5">Authorizations outside the United States</p>
+<a class="inline-flex items-center space-x-1 text-secondary hover:underline font-label-sm text-label-sm font-semibold mt-1" href="#travel-notice">
+<span>Set travel notice advisory</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="intl-toggle" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<div class="h-px bg-surface-variant/50"></div>
+<!-- Online Purchases -->
+<div class="flex items-center justify-between py-1">
+<div class="pr-4">
+<label class="font-title-md text-body-lg text-on-surface font-semibold cursor-pointer" for="online-toggle">Online Purchases</label>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs mt-0.5">Card-not-present ecommerce transactions</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="online-toggle" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<div class="h-px bg-surface-variant/50"></div>
+<!-- Contactless & ATM Withdrawals -->
+<div class="flex items-center justify-between py-1">
+<div class="pr-4">
+<label class="font-title-md text-body-lg text-on-surface font-semibold cursor-pointer" for="contactless-toggle">Contactless &amp; ATM Withdrawals</label>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs mt-0.5">Physical chip, tap-to-pay, and worldwide cash dispensers</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="contactless-toggle" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</section>
+<!-- Limits & Controls Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant/70 p-5 shadow-sm space-y-5">
+<div class="flex items-center justify-between border-b border-surface-variant/40 pb-3">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-primary font-semibold">Limits &amp; Controls</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs">Self-imposed daily risk management parameters</p>
+</div>
+</div>
+<button class="font-label-sm text-label-sm text-secondary hover:text-primary font-semibold uppercase tracking-wider transition-colors">
+          Reset Defaults
+        </button>
+</div>
+<!-- Daily Spending Limit Slider -->
+<div class="space-y-2">
+<div class="flex justify-between items-baseline">
+<div>
+<span class="font-title-md text-body-lg text-on-surface font-semibold">Daily Spending Limit</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block text-xs">Includes Point-of-Sale and online orders</span>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md text-primary font-bold font-mono" id="spending-val">$5,000</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-xs"> / $10,000 cap</span>
+</div>
+</div>
+<div class="relative py-1">
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary-container" id="spending-slider" max="10000" min="1000" oninput="document.getElementById('spending-val').innerText = '$' + Number(this.value).toLocaleString()" step="500" type="range" value="5000"/>
+<div class="flex justify-between text-[11px] font-label-sm text-on-surface-variant mt-1.5">
+<span>$1,000 min</span>
+<span class="text-secondary font-medium">Standard Default: $5,000</span>
+<span>$10,000 maximum</span>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="font-label-sm text-label-sm text-primary hover:text-secondary font-semibold transition-colors flex items-center space-x-1">
+<span>Request higher executive limit</span>
+<span class="material-symbols-outlined text-[13px]">north_east</span>
+</button>
+</div>
+</div>
+<div class="h-px bg-surface-variant/50"></div>
+<!-- Daily ATM Withdrawal Limit -->
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-body-lg text-on-surface font-semibold">Daily ATM Withdrawal</span>
+<span class="font-body-md text-body-md text-on-surface-variant block text-xs mt-0.5">Complimentary ATM surcharge rebates worldwide</span>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md text-primary font-bold font-mono">$2,000.00</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container block text-[10px] uppercase font-semibold">Verified Daily</span>
+</div>
+</div>
+</section>
+<!-- Quick Action Card Utilities List -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant/70 overflow-hidden shadow-sm">
+<div class="p-4 border-b border-surface-variant/40 bg-surface-container-low/30">
+<h2 class="font-title-md text-title-md text-primary font-semibold">Card Utilities &amp; Servicing</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs">Direct concierge services for Alexander M. Vance</p>
+</div>
+<div class="divide-y divide-surface-variant/40">
+<!-- Change Card PIN -->
+<button class="w-full p-4 flex items-center justify-between hover:bg-surface-container-low/60 transition-colors text-left group">
+<div class="flex items-center space-x-3.5">
+<div class="w-9 h-9 rounded-lg bg-surface-variant/60 flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]">pin</span>
+</div>
+<div>
+<span class="font-title-md text-body-lg text-on-surface font-semibold block">Change Card PIN</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-xs">Update your 4-digit security code immediately</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</button>
+<!-- Order Replacement Metal Card -->
+<button class="w-full p-4 flex items-center justify-between hover:bg-surface-container-low/60 transition-colors text-left group">
+<div class="flex items-center space-x-3.5">
+<div class="w-9 h-9 rounded-lg bg-surface-variant/60 flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-title-md text-body-lg text-on-surface font-semibold">Order Replacement Metal Card</span>
+<span class="font-label-sm text-label-sm bg-secondary-fixed/50 text-secondary font-bold px-1.5 py-0.5 rounded text-[10px]">Priority</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant text-xs">Damaged or worn card • Complimentary overnight courier</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</button>
+<!-- Set Travel Notice Accordion Preview -->
+<div class="p-4 space-y-3 bg-surface-container-low/20" id="travel-notice">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3.5">
+<div class="w-9 h-9 rounded-lg bg-primary-container text-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">flight_takeoff</span>
+</div>
+<div>
+<span class="font-title-md text-body-lg text-on-surface font-semibold block">Set Travel Notice</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-xs">Ensure uninterrupted spending during international trips</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-semibold uppercase text-[10px]">Active</span>
+</div>
+<!-- Date Picker Preview Form -->
+<div class="mt-3 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/60 grid grid-cols-2 gap-3">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase text-[10px] block mb-1" for="travel-departure">Departure Date</label>
+<div class="flex items-center border border-outline-variant rounded-md px-2.5 py-1.5 bg-surface-container-low/40">
+<span class="material-symbols-outlined text-outline text-[16px] mr-1.5">calendar_month</span>
+<input class="w-full bg-transparent text-xs font-body-md text-on-surface focus:outline-none border-none p-0" id="travel-departure" type="date" value="2025-04-12"/>
+</div>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase text-[10px] block mb-1" for="travel-return">Return Date</label>
+<div class="flex items-center border border-outline-variant rounded-md px-2.5 py-1.5 bg-surface-container-low/40">
+<span class="material-symbols-outlined text-outline text-[16px] mr-1.5">event_upcoming</span>
+<input class="w-full bg-transparent text-xs font-body-md text-on-surface focus:outline-none border-none p-0" id="travel-return" type="date" value="2025-04-28"/>
+</div>
+</div>
+<div class="col-span-2 flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destination: <strong class="text-primary">Zurich &amp; Geneva, Switzerland</strong></span>
+<button class="font-label-sm text-label-sm bg-primary-container text-white px-3 py-1.5 rounded-md hover:bg-primary font-semibold transition-colors">Update Notice</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust & Regulatory Assurance Footer Badge -->
+<div class="flex flex-col items-center justify-center pt-2 pb-6 text-center space-y-1">
+<div class="flex items-center space-x-2 text-primary font-semibold font-label-sm text-label-sm tracking-widest uppercase">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>256-BIT ENCRYPTED • FDIC INSURED • EQUAL HOUSING LENDER</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-[12px]">Private Client Advisory Desk: +1 (888) 408-0288</p>
+</div>
+</main>
+<!-- Card Details Modal (Revealed via 'View Card Details') -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4" id="details-modal">
+<div class="bg-surface-container-lowest max-w-sm w-full rounded-2xl border border-secondary/40 p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+<div class="flex items-center justify-between border-b border-surface-variant pb-3">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary text-[24px]">shield_person</span>
+<h3 class="font-headline-md text-title-md font-semibold text-primary">Card Credentials</h3>
+</div>
+<button class="text-on-surface-variant hover:text-primary" onclick="toggleCardVisibility()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="space-y-3 font-mono text-sm">
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/60">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block font-sans">Full Card Number</span>
+<span class="text-primary font-bold text-base tracking-widest">4892 7701 4482 1184</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/60">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block font-sans">Expiration</span>
+<span class="text-primary font-bold text-base">08 / 2028</span>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/60">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block font-sans">CVV Security Code</span>
+<span class="text-secondary font-bold text-base">849</span>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/60">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block font-sans">Billing Zip Code</span>
+<span class="text-primary font-bold text-base">94104 (San Francisco, CA)</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center text-xs">
+        Secured by biometric verification. Closes in 30 seconds automatically.
+      </p>
+<button class="w-full py-2.5 rounded-lg bg-primary-container text-white font-label-md text-label-md font-semibold hover:bg-primary transition-colors" onclick="toggleCardVisibility()">
+        Dismiss Credentials
+      </button>
+</div>
+</div>
+<!-- Bottom Navigation Anchor (Shared Component: BottomNavBar with 'Cards' active) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-16 px-4 bg-surface dark:bg-inverse-surface border-t border-outline-variant dark:border-outline">
+<!-- Accounts Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant pt-1 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">account_balance</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase mt-1">Accounts</span>
+</a>
+<!-- Move Money Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant pt-1 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">swap_horiz</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase mt-1">Move Money</span>
+</a>
+<!-- Activity Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant pt-1 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">receipt_long</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase mt-1">Activity</span>
+</a>
+<!-- Cards Tab (ACTIVE per Mandate) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary font-semibold border-t-2 border-secondary dark:border-secondary-fixed pt-1" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">credit_card</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase mt-1">Cards</span>
+</a>
+</nav>
+<!-- Interactive Logic -->
+<script>
+    let isDetailsVisible = false;
+
+    function toggleCardVisibility() {
+      const modal = document.getElementById('details-modal');
+      const cardDigits = document.getElementById('card-digits');
+      const cvvDigits = document.getElementById('cvv-digits');
+      const eyeIcon = document.getElementById('eye-icon');
+      const eyeLabel = document.getElementById('eye-label');
+
+      isDetailsVisible = !isDetailsVisible;
+
+      if (isDetailsVisible) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        cardDigits.innerText = '4892 7701 4482 1184';
+        cvvDigits.innerText = '849';
+        eyeIcon.innerText = 'visibility_off';
+        eyeLabel.innerText = 'Hide Card Details';
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        cardDigits.innerText = '•••• •••• •••• 1184';
+        cvvDigits.innerText = '•••';
+        eyeIcon.innerText = 'visibility';
+        eyeLabel.innerText = 'View Card Details';
+      }
+    }
+
+    function handleCardFreeze(checkbox) {
+      if (checkbox.checked) {
+        alert('Card has been temporarily frozen. All recurring and new transactions will be declined until unlocked.');
+      } else {
+        alert('Card lock lifted. All transaction permissions restored.');
+      }
+    }
+  </script>
+</body></html>

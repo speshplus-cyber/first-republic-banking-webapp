@@ -1,0 +1,160 @@
+/* Modern Fintech UI - Inspired by Cash App, Venmo, Apple Wallet, and First Republic */
+
+:root {
+  --primary-color: #00241b;
+  --primary-accent: #00D632; /* Cash App green */
+  --emerald-rich: #064e3b;
+  --emerald-subtle: #ecfdf5;
+  --gold-accent: #c8a252;
+  --bg-canvas: #f8faf9;
+  --surface-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-light: #e2e8f0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", Roboto, sans-serif;
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Material Symbols alignment */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.material-symbols-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Luxury Obsidian & Emerald Metal Card */
+.metal-card-gradient {
+  background: radial-gradient(circle at 80% 20%, rgba(200, 162, 82, 0.15), transparent 40%),
+              linear-gradient(135deg, #0e2a22 0%, #071914 50%, #030d0a 100%);
+  box-shadow: 0 20px 40px -15px rgba(3, 29, 22, 0.5), 0 0 0 1px rgba(200, 162, 82, 0.25);
+}
+
+.metal-frozen {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.6), 0 0 0 1px rgba(148, 163, 184, 0.3) !important;
+  filter: grayscale(0.7) contrast(1.05);
+}
+
+.chip-gold {
+  background: linear-gradient(135deg, #fcd34d 0%, #d97706 60%, #92400e 100%);
+}
+
+.foil-gold {
+  color: #dfba6d;
+  letter-spacing: 0.05em;
+}
+
+/* Hide scrollbars */
+.scrollbar-none::-webkit-scrollbar,
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none,
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Modern Pill Button */
+.btn-pill {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-pill:active {
+  transform: scale(0.97);
+}
+
+/* Tabular figures for aligned financial numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Slide-in Drawers & Modal animation */
+.drawer-slide-in {
+  animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating Bottom Navigation Bar */
+.floating-bottom-bar {
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06), 0 -1px 2px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Real-world modern input style */
+.fintech-input {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.fintech-input:focus {
+  outline: none;
+  border-color: #00241b;
+  box-shadow: 0 0 0 3px rgba(0, 36, 27, 0.1);
+}
+
+/* Toast Notification */
+#frb-toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  left: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  #frb-toast-container {
+    left: auto;
+    width: 380px;
+  }
+}
+
+.frb-toast {
+  pointer-events: auto;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border-radius: 1rem;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: toastIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

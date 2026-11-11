@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>First Republic Bank - Register Online Banking</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Playfair Display & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#2d4d41",
+            "surface": "#f9f9ff",
+            "outline": "#717975",
+            "surface-dim": "#d3daef",
+            "surface-container": "#e9edff",
+            "on-tertiary-container": "#82a496",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#bfecdb",
+            "secondary-fixed-dim": "#eac16d",
+            "outline-variant": "#c0c8c3",
+            "secondary": "#785a0e",
+            "secondary-fixed": "#ffdea1",
+            "tertiary-fixed-dim": "#abcebf",
+            "on-primary-fixed": "#002118",
+            "primary-container": "#0e3b2f",
+            "tertiary-fixed": "#c7eadb",
+            "inverse-on-surface": "#edf0ff",
+            "on-error": "#ffffff",
+            "inverse-primary": "#a3d0bf",
+            "on-error-container": "#93000a",
+            "primary": "#00241b",
+            "on-secondary-fixed-variant": "#5c4300",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#dce2f7",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#244e41",
+            "tertiary": "#02241b",
+            "surface-variant": "#dce2f7",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed": "#002117",
+            "on-surface": "#141b2b",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#3c6658",
+            "secondary-container": "#ffd47f",
+            "on-background": "#141b2b",
+            "on-secondary-container": "#795a0f",
+            "on-primary-container": "#7aa696",
+            "surface-bright": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "surface-container-low": "#f1f3ff",
+            "surface-container-high": "#e1e8fd",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed": "#261900",
+            "on-surface-variant": "#414845",
+            "tertiary-container": "#1a3a2f",
+            "primary-fixed-dim": "#a3d0bf",
+            "background": "#f9f9ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin-desktop": "2.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-xl": "2.5rem",
+            "margin": "1rem",
+            "space-lg": "1.5rem",
+            "gutter": "1rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "headline-xl-mobile": ["Playfair Display"],
+            "headline-lg": ["Playfair Display"],
+            "headline-xl": ["Playfair Display"],
+            "headline-md": ["Playfair Display"],
+            "label-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-lg-mobile": ["Playfair Display"],
+            "title-md": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col justify-between selection:bg-secondary-fixed selection:text-primary">
+<!-- Top Executive Header (Linear/Transactional task view: Focused top navigation) -->
+<header class="bg-primary-container text-on-primary sticky top-0 z-30 shadow-md">
+<div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+<!-- Back Button -->
+<button aria-label="Go back" class="flex items-center text-primary-fixed-dim hover:text-on-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-2xl" data-icon="arrow_back">arrow_back</span>
+<span class="ml-1 font-label-md text-label-md hidden sm:inline">Back to Sign In</span>
+</button>
+<!-- Brand Monogram & Crest -->
+<div class="flex items-center space-x-2 text-center">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-2xl" data-icon="flight" data-weight="fill" style="font-variation-settings: 'FILL' 1;">flight</span>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md tracking-tight text-on-primary">First Republic</span>
+<span class="font-label-sm text-[9px] tracking-widest text-secondary-fixed-dim uppercase -mt-1">It's a privilege to serve you®</span>
+</div>
+</div>
+<!-- Concierge Assistance Link -->
+<a class="flex items-center text-secondary-fixed hover:text-secondary-fixed-dim transition-colors space-x-1" href="tel:18884080288">
+<span class="material-symbols-outlined text-lg" data-icon="support_agent">support_agent</span>
+<span class="font-label-md text-label-md hidden md:inline">Private Banker</span>
+</a>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow max-w-2xl w-full mx-auto px-4 py-8 md:py-12">
+<!-- Multi-Step Onboarding Progression Bar -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider text-secondary">Step 1 of 3</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">Identity Verification</span>
+</div>
+<!-- Progress Bar Track -->
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden flex">
+<div class="bg-secondary h-full rounded-full transition-all duration-500 w-1/3"></div>
+</div>
+<!-- Step Chips / Tabs -->
+<div class="grid grid-cols-3 gap-2 mt-3 text-center">
+<div class="border-b-2 border-secondary pb-1">
+<p class="font-label-sm text-label-sm text-primary font-semibold">1. Identity</p>
+</div>
+<div class="border-b-2 border-outline-variant pb-1">
+<p class="font-label-sm text-label-sm text-outline">2. Account Details</p>
+</div>
+<div class="border-b-2 border-outline-variant pb-1">
+<p class="font-label-sm text-label-sm text-outline">3. Biometrics</p>
+</div>
+</div>
+</div>
+<!-- Architectural Form Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 sm:p-10 shadow-sm relative overflow-hidden">
+<!-- Decorative Heritage Brass Rim -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-secondary-fixed to-secondary"></div>
+<!-- Header Section -->
+<div class="mb-8">
+<div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-primary-container/10 border border-primary-container/20 text-primary-container mb-3">
+<span class="material-symbols-outlined text-sm" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase font-semibold">Client Onboarding</span>
+</div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight">Register Online Banking</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">
+          Connect your existing account or establish executive credentials for your Private Client relationship.
+        </p>
+</div>
+<!-- Registration Form -->
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Legal Name Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="firstName">
+              Legal First Name <span class="text-secondary">*</span>
+</label>
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary transition-all font-body-md text-body-md" id="firstName" placeholder="e.g. Sterling" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="lastName">
+              Legal Last Name <span class="text-secondary">*</span>
+</label>
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary transition-all font-body-md text-body-md" id="lastName" placeholder="e.g. Vance" required="" type="text"/>
+</div>
+</div>
+<!-- SSN & Date of Birth Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- SSN / Tax ID with toggle -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="ssnInput">
+                Social Security / Tax ID <span class="text-secondary">*</span>
+</label>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1 font-label-sm text-[11px]" id="toggleSsnBtn" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="visibility" id="ssnEyeIcon">visibility</span>
+<span id="ssnToggleLabel">Show</span>
+</button>
+</div>
+<div class="relative">
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary tracking-widest font-mono text-body-md" id="ssnInput" maxlength="11" placeholder="••• - •• - ••••" required="" type="password"/>
+<span class="absolute right-3 top-3 text-outline material-symbols-outlined text-lg" data-icon="lock">lock</span>
+</div>
+</div>
+<!-- Date of Birth -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="dob">
+              Date of Birth <span class="text-secondary">*</span>
+</label>
+<div class="relative">
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary font-body-md text-body-md" id="dob" placeholder="MM / DD / YYYY" required="" type="text"/>
+<span class="absolute right-3 top-3 text-outline material-symbols-outlined text-lg" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Account Number or Debit Card Number -->
+<div>
+<div class="flex justify-between items-center mb-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="accountNum">
+              Account or Debit Card Number <span class="text-secondary">*</span>
+</label>
+<span class="font-label-sm text-label-sm text-outline-variant">Located on your statement or card</span>
+</div>
+<div class="relative">
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary tracking-wider font-body-md text-body-md" id="accountNum" placeholder="e.g. 10 or 12-digit account number" required="" type="text"/>
+<span class="absolute right-3 top-3 text-outline material-symbols-outlined text-lg" data-icon="credit_card">credit_card</span>
+</div>
+</div>
+<!-- Contact Information (Email & Phone) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Email -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="email">
+              Primary Email Address <span class="text-secondary">*</span>
+</label>
+<div class="relative">
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary font-body-md text-body-md" id="email" placeholder="client@firm.com" required="" type="email"/>
+<span class="absolute right-3 top-3 text-outline material-symbols-outlined text-lg" data-icon="mail">mail</span>
+</div>
+</div>
+<!-- Mobile Phone for 2FA -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="phone">
+              Mobile Phone (for 2FA) <span class="text-secondary">*</span>
+</label>
+<div class="relative">
+<input class="w-full px-3.5 py-2.5 bg-surface text-on-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary font-body-md text-body-md" id="phone" placeholder="(555) 000-0000" required="" type="tel"/>
+<span class="absolute right-3 top-3 text-outline material-symbols-outlined text-lg" data-icon="smartphone">smartphone</span>
+</div>
+</div>
+</div>
+<!-- Consent & Agreements Section -->
+<div class="pt-4 border-t border-outline-variant space-y-3">
+<div class="flex items-start">
+<div class="flex items-center h-5">
+<input class="h-4 w-4 text-primary-container focus:ring-secondary border-outline-variant rounded" id="consentDisclosures" required="" type="checkbox"/>
+</div>
+<div class="ml-3 text-xs leading-5">
+<label class="font-body-md text-body-md text-on-surface-variant" for="consentDisclosures">
+                I agree to the <a class="text-primary font-semibold underline decoration-secondary" href="#">Electronic Communications Disclosure</a> and consent to receive digital verification codes.
+              </label>
+</div>
+</div>
+<div class="flex items-start">
+<div class="flex items-center h-5">
+<input class="h-4 w-4 text-primary-container focus:ring-secondary border-outline-variant rounded" id="consentTerms" required="" type="checkbox"/>
+</div>
+<div class="ml-3 text-xs leading-5">
+<label class="font-body-md text-body-md text-on-surface-variant" for="consentTerms">
+                I acknowledge the <a class="text-primary font-semibold underline decoration-secondary" href="#">Online Banking Terms of Service</a> and First Republic's Private Client <a class="text-primary font-semibold underline decoration-secondary" href="#">Privacy Policy</a>.
+              </label>
+</div>
+</div>
+</div>
+<!-- Primary Call To Action Button -->
+<div class="pt-4">
+<button class="w-full bg-primary-container hover:bg-primary text-on-primary py-3.5 px-6 rounded-lg font-label-md text-title-md font-semibold tracking-wide flex items-center justify-center space-x-2 transition-all duration-150 active:scale-[0.99] shadow-sm hover:shadow" type="submit">
+<span>Continue to Security Setup</span>
+<span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Assisted Concierge Callout -->
+<div class="text-center pt-2">
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Need immediate onboarding support? Call your relationship team at 
+            <a class="text-secondary font-semibold hover:underline" href="tel:18003921400"> (800) 392-1400</a>
+</p>
+</div>
+</form>
+</div>
+<!-- Security & Trust Badge Container -->
+<div class="mt-8 flex flex-col items-center justify-center space-y-3">
+<div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-primary-container/5 border border-primary-container/15 text-primary">
+<span class="material-symbols-outlined text-base" data-icon="shield">shield</span>
+<span class="font-label-sm text-[11px] tracking-widest font-semibold uppercase">256-Bit Bank Grade Encryption</span>
+</div>
+<p class="font-label-sm text-[11px] text-outline text-center tracking-wider uppercase">
+        Member FDIC • Equal Housing Lender • First Republic Private Wealth Management
+      </p>
+</div>
+</main>
+<!-- Institutional Compliance & Privacy Footer -->
+<footer class="w-full bg-surface-container-low border-t border-outline-variant py-6 mt-12">
+<div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-on-surface-variant font-label-sm text-[11px] space-y-3 sm:space-y-0">
+<div>
+        © 2025 First Republic Bank. All rights reserved.
+      </div>
+<div class="flex space-x-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy Notice</a>
+<a class="hover:text-primary transition-colors" href="#">Security Center</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Use</a>
+<a class="hover:text-primary transition-colors" href="#">Accessibility</a>
+</div>
+</div>
+</footer>
+<!-- Inline Script for Mask Toggle Micro-Interaction -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const ssnInput = document.getElementById('ssnInput');
+      const toggleBtn = document.getElementById('toggleSsnBtn');
+      const eyeIcon = document.getElementById('ssnEyeIcon');
+      const toggleLabel = document.getElementById('ssnToggleLabel');
+
+      if (toggleBtn && ssnInput) {
+        toggleBtn.addEventListener('click', () => {
+          if (ssnInput.type === 'password') {
+            ssnInput.type = 'text';
+            eyeIcon.textContent = 'visibility_off';
+            toggleLabel.textContent = 'Hide';
+          } else {
+            ssnInput.type = 'password';
+            eyeIcon.textContent = 'visibility';
+            toggleLabel.textContent = 'Show';
+          }
+        });
+      }
+    });
+  </script>
+</body></html>

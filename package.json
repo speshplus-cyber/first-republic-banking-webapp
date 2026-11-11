@@ -1,0 +1,17 @@
+{
+  "name": "first-republic-banking-webapp",
+  "version": "1.0.0",
+  "description": "First Republic Bank - Heritage Private Banking Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "banking",
+    "private-wealth",
+    "first-republic",
+    "fintech"
+  ],
+  "author": "",
+  "license": "ISC"
+}
