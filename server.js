@@ -28,17 +28,28 @@ const server = http.createServer((req, res) => {
     reqUrl = '/index.html';
   }
 
-  // Sanitize path for both Windows and Linux (Vercel)
-  const cleanUrl = reqUrl.replace(/\\/g, '/');
-  const filePath = path.resolve(PUBLIC_DIR, '.' + cleanUrl);
+  // Handle clean URLs and direct file requests
+  let cleanUrl = reqUrl.replace(/\\/g, '/');
+  let filePath = path.join(PUBLIC_DIR, cleanUrl);
 
-  // Clean URL mapping
   let targetPath = filePath;
-  if (!fs.existsSync(targetPath) || (fs.existsSync(targetPath) && fs.statSync(targetPath).isDirectory())) {
+  if (!fs.existsSync(targetPath) || fs.statSync(targetPath).isDirectory()) {
     if (fs.existsSync(filePath + '.html')) {
       targetPath = filePath + '.html';
     } else if (fs.existsSync(path.join(filePath, 'index.html'))) {
       targetPath = path.join(filePath, 'index.html');
+    }
+  }
+
+  // Also check relative to process.cwd() if PUBLIC_DIR differs
+  if (!fs.existsSync(targetPath)) {
+    let cwdPath = path.join(process.cwd(), cleanUrl);
+    if (fs.existsSync(cwdPath) && !fs.statSync(cwdPath).isDirectory()) {
+      targetPath = cwdPath;
+    } else if (fs.existsSync(cwdPath + '.html')) {
+      targetPath = cwdPath + '.html';
+    } else if (fs.existsSync(path.join(cwdPath, 'index.html'))) {
+      targetPath = path.join(cwdPath, 'index.html');
     }
   }
 
@@ -52,6 +63,7 @@ const server = http.createServer((req, res) => {
           <body style="font-family:sans-serif; text-align:center; padding:50px;">
             <h2>Page Not Found</h2>
             <p>The requested URL was not found on this server.</p>
+            <p style="font-size:10px; color:#999;">Tried: ${targetPath} | CWD: ${process.cwd()} | __dirname: ${__dirname}</p>
             <a href="/index.html">Return to Private Wealth Portal</a>
           </body>
         </html>
