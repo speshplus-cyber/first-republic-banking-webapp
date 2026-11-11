@@ -28,19 +28,17 @@ const server = http.createServer((req, res) => {
     reqUrl = '/index.html';
   }
 
-  const filePath = path.join(PUBLIC_DIR, reqUrl);
-
-  // Security: prevent path traversal outside PUBLIC_DIR
-  if (!filePath.startsWith(PUBLIC_DIR)) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
-    return res.end('403 Forbidden');
-  }
+  // Sanitize path for both Windows and Linux (Vercel)
+  const cleanUrl = reqUrl.replace(/\\/g, '/');
+  const filePath = path.resolve(PUBLIC_DIR, '.' + cleanUrl);
 
   // Clean URL mapping
   let targetPath = filePath;
-  if (!fs.existsSync(targetPath) || fs.statSync(targetPath).isDirectory()) {
+  if (!fs.existsSync(targetPath) || (fs.existsSync(targetPath) && fs.statSync(targetPath).isDirectory())) {
     if (fs.existsSync(filePath + '.html')) {
       targetPath = filePath + '.html';
+    } else if (fs.existsSync(path.join(filePath, 'index.html'))) {
+      targetPath = path.join(filePath, 'index.html');
     }
   }
 
