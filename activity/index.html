@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>First Republic Bank - Activity</title>
+  
+  <!-- Modern Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/custom.css"/>
+  <script src="/js/state.js"></script>
+  <script src="/js/components.js"></script>
+</head>
+<body class="bg-[#f8faf9] text-slate-900 font-sans antialiased min-h-screen pb-24 md:pb-12">
+
+  <!-- TOP APP BAR -->
+  <header id="site-header" class="bg-white border-b border-slate-200/80 sticky top-0 z-40"></header>
+
+  <!-- MAIN CANVAS -->
+  <main class="max-w-xl mx-auto px-4 pt-5 pb-8 space-y-4">
+
+    <!-- HEADER TITLE & STATEMENTS LINK -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Activity</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Real-time payments, transfers, and card clearance</p>
+      </div>
+      <button onclick="downloadStatementCsv()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 shadow-sm transition-all btn-pill">
+        <span class="material-symbols-outlined text-base text-slate-600">download</span>
+        <span>Export</span>
+      </button>
+    </div>
+
+    <!-- SEARCH BAR (Venmo & PayPal style) -->
+    <div class="relative">
+      <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-lg">search</span>
+      <input id="activitySearch" oninput="handleActivitySearch(this.value)" type="text" placeholder="Search payments, people, and businesses" class="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm font-medium fintech-input shadow-sm">
+      <button id="clearSearchBtn" onclick="clearActivitySearch()" class="material-symbols-outlined absolute right-3 top-3 text-slate-400 hover:text-slate-700 text-base hidden">cancel</button>
+    </div>
+
+    <!-- FILTER CHIPS -->
+    <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+      <button id="filter-all" onclick="setActivityFilter('all')" class="px-4 py-1.5 rounded-full bg-slate-900 text-white text-xs font-bold shrink-0 shadow-sm btn-pill">
+        All
+      </button>
+      <button id="filter-money-out" onclick="setActivityFilter('out')" class="px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-semibold shrink-0 btn-pill">
+        Money Out
+      </button>
+      <button id="filter-money-in" onclick="setActivityFilter('in')" class="px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-semibold shrink-0 btn-pill">
+        Money In
+      </button>
+    </div>
+
+    <!-- TRANSACTIONS LIST CONTAINER -->
+    <div id="activityContainer" class="rounded-3xl bg-white border border-slate-200/80 p-3 sm:p-5 shadow-sm space-y-2">
+      <!-- Populated dynamically -->
+    </div>
+
+  </main>
+
+  <!-- BOTTOM FLOATING DOCK -->
+  <nav id="site-bottom-nav"></nav>
+
+  <!-- RECEIPT SLIDE-OVER SHEET / MODAL -->
+  <div id="tx-sheet" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeTxSheet()"></div>
+    <div class="relative bg-white rounded-t-3xl sm:rounded-3xl max-w-sm w-full p-6 shadow-2xl z-10 drawer-slide-in">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900">Payment Details</h3>
+        <button onclick="closeTxSheet()" class="text-slate-400 hover:text-slate-700 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="py-5 text-center">
+        <div class="w-14 h-14 mx-auto mb-2 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center text-2xl font-bold">
+          <span class="material-symbols-outlined text-2xl" id="sheetIcon">shopping_bag</span>
+        </div>
+        <h2 class="text-lg font-bold text-slate-900" id="sheetMerchant">Merchant Name</h2>
+        <p class="text-xs text-slate-400" id="sheetSubtitle">Category Â· Today</p>
+
+        <div class="text-3xl font-extrabold my-2 font-mono tabular-nums" id="sheetAmount">-$0.00</div>
+        
+        <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span id="sheetStatus">Completed Â· Instant Rail</span>
+        </div>
+
+        <div class="mt-5 p-3.5 bg-slate-50 rounded-2xl border border-slate-100 text-left text-xs space-y-2 text-slate-600">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Reference ID:</span>
+            <span class="font-mono font-bold text-slate-800" id="sheetTxId">#FRB-883921</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Payment Method:</span>
+            <span class="font-medium text-slate-800" id="sheetMethod">Personal Checking</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Note:</span>
+            <span class="font-medium text-slate-800" id="sheetNote">â€”</span>
+          </div>
+        </div>
+
+        <div class="mt-5 flex space-x-2">
+          <button onclick="repeatPayment()" class="flex-1 py-3 rounded-2xl bg-[#00241b] text-white text-xs font-bold hover:bg-emerald-950 btn-pill">
+            Send Again
+          </button>
+          <button onclick="closeTxSheet()" class="py-3 px-4 rounded-2xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 btn-pill">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeFilter = 'all';
+    let currentSearch = '';
+    let selectedTx = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.renderHeader('activity');
+      window.renderBottomNav('activity');
+      renderActivityFeed();
+    });
+
+    function setActivityFilter(filter) {
+      activeFilter = filter;
+      const chips = {
+        all: document.getElementById('filter-all'),
+        out: document.getElementById('filter-money-out'),
+        in: document.getElementById('filter-money-in')
+      };
+
+      Object.keys(chips).forEach(k => {
+        if (k === filter) {
+          chips[k].className = 'px-4 py-1.5 rounded-full bg-slate-900 text-white text-xs font-bold shrink-0 shadow-sm btn-pill';
+        } else {
+          chips[k].className = 'px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-semibold shrink-0 btn-pill';
+        }
+      });
+
+      renderActivityFeed();
+    }
+
+    function handleActivitySearch(val) {
+      currentSearch = val.toLowerCase().trim();
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (currentSearch.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderActivityFeed();
+    }
+
+    function clearActivitySearch() {
+      document.getElementById('activitySearch').value = '';
+      currentSearch = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      renderActivityFeed();
+    }
+
+    function renderActivityFeed() {
+      const container = document.getElementById('activityContainer');
+      const allTx = window.FRB.state.transactions;
+
+      let filtered = allTx.filter(tx => {
+        if (activeFilter === 'out' && tx.amount >= 0) return false;
+        if (activeFilter === 'in' && tx.amount <= 0) return false;
+
+        if (currentSearch) {
+          const matchMerchant = tx.merchant.toLowerCase().includes(currentSearch);
+          const matchSub = (tx.subtitle || '').toLowerCase().includes(currentSearch);
+          const matchCat = (tx.category || '').toLowerCase().includes(currentSearch);
+          const matchTxId = (tx.txId || '').toLowerCase().includes(currentSearch);
+          return matchMerchant || matchSub || matchCat || matchTxId;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-400 space-y-2">
+            <span class="material-symbols-outlined text-4xl text-slate-300">receipt_long</span>
+            <div class="text-sm font-bold text-slate-700">No Transactions Found</div>
+            <p class="text-xs text-slate-400">Payments and transfers will appear here in real time.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(tx => {
+        const isPositive = tx.amount > 0;
+        return `
+          <div onclick="openTxSheet('${tx.txId}')" class="py-3 px-2 sm:px-3 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer flex items-center justify-between">
+            <div class="flex items-center space-x-3 min-w-0">
+              <div class="w-10 h-10 rounded-2xl ${isPositive ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-800'} flex items-center justify-center shrink-0 font-bold">
+                <span class="material-symbols-outlined text-xl">${tx.icon || (isPositive ? 'arrow_downward' : 'shopping_bag')}</span>
+              </div>
+              <div class="min-w-0">
+                <div class="text-xs sm:text-sm font-bold text-slate-900 truncate">${tx.merchant}</div>
+                <div class="text-[11px] text-slate-400 truncate">${tx.subtitle || tx.category} Â· ${tx.date}</div>
+              </div>
+            </div>
+            <div class="text-right shrink-0 font-mono pl-3">
+              <span class="text-xs sm:text-sm font-bold ${isPositive ? 'text-emerald-700' : 'text-slate-900'}">
+                ${window.FRB.formatCurrency(tx.amount, true)}
+              </span>
+              <div class="text-[10px] text-slate-400 font-medium">${tx.status || 'completed'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openTxSheet(txId) {
+      const tx = window.FRB.state.transactions.find(t => t.txId === txId);
+      if (!tx) return;
+
+      selectedTx = tx;
+      document.getElementById('sheetMerchant').innerText = tx.merchant;
+      document.getElementById('sheetSubtitle').innerText = `${tx.category || 'Payment'} Â· ${tx.date}`;
+      document.getElementById('sheetAmount').innerText = window.FRB.formatCurrency(tx.amount, true);
+      document.getElementById('sheetAmount').className = `text-3xl font-extrabold my-2 font-mono tabular-nums ${tx.amount > 0 ? 'text-emerald-700' : 'text-slate-900'}`;
+      document.getElementById('sheetTxId').innerText = tx.txId;
+      document.getElementById('sheetMethod').innerText = tx.method || tx.account || 'Checking';
+      document.getElementById('sheetNote').innerText = tx.note || 'None specified';
+      document.getElementById('sheetIcon').innerText = tx.icon || (tx.amount > 0 ? 'arrow_downward' : 'shopping_bag');
+
+      document.getElementById('tx-sheet').classList.remove('hidden');
+    }
+
+    function closeTxSheet() {
+      document.getElementById('tx-sheet').classList.add('hidden');
+    }
+
+    function repeatPayment() {
+      closeTxSheet();
+      if (selectedTx) {
+        window.location.href = `transfer.html?recipient=${encodeURIComponent(selectedTx.merchant)}&amount=${Math.abs(selectedTx.amount)}`;
+      }
+    }
+
+    function downloadStatementCsv() {
+      window.showToast('Exporting official account CSV statement...', 'info');
+      setTimeout(() => {
+        const rows = [["Date", "Merchant", "Amount", "Category", "Status"]];
+        window.FRB.state.transactions.forEach(t => {
+          rows.push([t.date, t.merchant, t.amount, t.category, t.status]);
+        });
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "First_Republic_Account_Activity.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.showToast('Activity exported successfully!', 'success');
+      }, 700);
+    }
+  </script>
+</body>
+</html>
+

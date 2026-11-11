@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>First Republic Bank - Operations & Treasury Admin Portal</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/custom.css"/>
+  <script src="/js/state.js"></script>
+  <script src="/js/components.js"></script>
+
+  <style>
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .table-row-hover:hover { background-color: rgba(16, 185, 129, 0.05); }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #071711; }
+    ::-webkit-scrollbar-thumb { background: #133a2c; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #1f5d47; }
+  </style>
+</head>
+<body class="bg-[#05110d] text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-[#ffd47f] selection:text-slate-900">
+
+  <!-- Top Admin Navigation Bar -->
+  <header class="bg-[#091b14] border-b border-emerald-900/60 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      
+      <!-- Logo & System Badge -->
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-[#00241b] border border-[#ffd47f]/40 text-[#ffd47f] flex items-center justify-center font-bold shadow-inner">
+            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-serif font-bold text-base sm:text-lg text-white tracking-wide">First Republic</span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/30 text-[10px] font-mono font-bold text-emerald-400">OPERATIONS DESK</span>
+            </div>
+            <p class="text-[11px] text-slate-400 hidden sm:block">Central Treasury, Liquidity &amp; User Custody Desk</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Shortcuts & Operator Badge -->
+      <div class="flex items-center space-x-3">
+        <!-- Client Portal Quick Link -->
+        <a href="/dashboard" class="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-800/60 text-xs font-semibold text-emerald-300 hover:text-white hover:bg-emerald-900/60 transition-colors">
+          <span class="material-symbols-outlined text-base">storefront</span>
+          <span>Open Client App</span>
+        </a>
+
+        <!-- Operator Profile Pill -->
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-[#0d271d] border border-emerald-800/60">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+          <div class="text-left">
+            <div class="text-[11px] font-bold text-white flex items-center space-x-1">
+              <span id="adminOperatorName">Admin Controller</span>
+              <span class="text-[9px] text-[#ffd47f] font-mono">#MASTER</span>
+            </div>
+            <div class="text-[9px] text-emerald-400 font-mono">2FA Hardware Verified</div>
+          </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button onclick="handleAdminSignOut()" title="Sign Out of Operations" class="p-2 rounded-xl bg-red-950/40 border border-red-900/50 text-red-400 hover:bg-red-900/50 hover:text-red-200 transition-colors">
+          <span class="material-symbols-outlined text-lg">logout</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Admin Workspace -->
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1">
+    
+    <!-- Hero / Metrics Overview -->
+    <section>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div>
+          <h1 class="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
+            <span>Treasury &amp; Client Ledger Overview</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-md bg-[#ffd47f]/10 text-[#ffd47f] font-mono font-bold border border-[#ffd47f]/20">LIVE AUDIT</span>
+          </h1>
+          <p class="text-xs text-slate-400 mt-0.5">Real-time ledger state, liquidity reserves, user accounts, and card cashout settlements.</p>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <button onclick="refreshAllData()" class="px-3 py-2 rounded-xl bg-emerald-950 border border-emerald-800/60 text-xs font-semibold text-emerald-300 hover:text-white hover:bg-emerald-900/60 transition-colors flex items-center space-x-1.5 btn-pill">
+            <span class="material-symbols-outlined text-base">refresh</span>
+            <span>Refresh State</span>
+          </button>
+          <button onclick="openCreateUserModal()" class="px-3 py-2 rounded-xl bg-[#ffd47f] text-[#00241b] text-xs font-bold hover:bg-[#ffe09e] transition-colors flex items-center space-x-1.5 btn-pill shadow-lg shadow-amber-500/10">
+            <span class="material-symbols-outlined text-base">person_add</span>
+            <span>Provision Account</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Metric 1: Total Custody Liquidity -->
+        <div class="p-4 rounded-2xl bg-[#091f16] border border-emerald-900/60 relative overflow-hidden group">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Total Checking Liquidity</span>
+            <span class="material-symbols-outlined text-emerald-500 text-lg">account_balance</span>
+          </div>
+          <div id="statTotalLiquidity" class="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">$0.00</div>
+          <div class="text-[10px] text-slate-400 mt-1 flex items-center space-x-1">
+            <span class="text-emerald-400 font-semibold font-mono">100% Backed</span>
+            <span>Â· Instant Reserves</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Total Savings Assets -->
+        <div class="p-4 rounded-2xl bg-[#091f16] border border-emerald-900/60 relative overflow-hidden group">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-[#ffd47f]">High-Yield Savings</span>
+            <span class="material-symbols-outlined text-[#ffd47f] text-lg">savings</span>
+          </div>
+          <div id="statTotalSavings" class="text-xl sm:text-2xl font-black text-[#ffd47f] font-mono tracking-tight">$0.00</div>
+          <div class="text-[10px] text-slate-400 mt-1 flex items-center space-x-1">
+            <span class="text-amber-400 font-semibold font-mono">4.85% APY</span>
+            <span>Â· FDIC Insured</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Active Accounts -->
+        <div class="p-4 rounded-2xl bg-[#091f16] border border-emerald-900/60 relative overflow-hidden group">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-300">Active Accounts</span>
+            <span class="material-symbols-outlined text-slate-400 text-lg">group</span>
+          </div>
+          <div id="statTotalUsers" class="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">0</div>
+          <div class="text-[10px] text-slate-400 mt-1 flex items-center space-x-1">
+            <span id="statFrozenUsers" class="text-emerald-400 font-semibold font-mono">0 Frozen</span>
+            <span>Â· Multi-User Core</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Card Cashout Requests -->
+        <div class="p-4 rounded-2xl bg-[#091f16] border border-emerald-900/60 relative overflow-hidden group">
+          <div class="flex items-center justify-between text-slate-400 mb-1">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">Card Cashout Logs</span>
+            <span class="material-symbols-outlined text-cyan-400 text-lg">credit_card</span>
+          </div>
+          <div id="statTotalCashouts" class="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">0</div>
+          <div class="text-[10px] text-slate-400 mt-1 flex items-center space-x-1">
+            <span class="text-cyan-400 font-semibold">Verified Cards</span>
+            <span>Â· Instant Push</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center space-x-2 border-b border-emerald-900/60 pb-2 overflow-x-auto">
+      <button onclick="switchTab('users')" id="tabBtnUsers" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all bg-[#ffd47f] text-[#00241b] shadow-md shadow-amber-500/10">
+        <span class="material-symbols-outlined text-lg">manage_accounts</span>
+        <span>User Accounts &amp; Balances</span>
+        <span id="tabCountUsers" class="px-1.5 py-0.5 rounded-full bg-[#00241b] text-[#ffd47f] text-[10px] font-mono font-bold">5</span>
+      </button>
+
+      <button onclick="switchTab('ledger')" id="tabBtnLedger" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-emerald-950/40">
+        <span class="material-symbols-outlined text-lg">receipt_long</span>
+        <span>Consolidated System Ledger</span>
+        <span id="tabCountLedger" class="px-1.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-mono font-bold">0</span>
+      </button>
+
+      <button onclick="switchTab('cashouts')" id="tabBtnCashouts" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-emerald-950/40">
+        <span class="material-symbols-outlined text-lg">payment</span>
+        <span>Debit Card Cashouts</span>
+        <span id="tabCountCashouts" class="px-1.5 py-0.5 rounded-full bg-emerald-950 text-cyan-400 text-[10px] font-mono font-bold">0</span>
+      </button>
+
+      <button onclick="switchTab('treasury')" id="tabBtnTreasury" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-emerald-950/40">
+        <span class="material-symbols-outlined text-lg">tune</span>
+        <span>Treasury Controls &amp; Export</span>
+      </button>
+    </div>
+
+    <!-- ==================== TAB 1: USER ACCOUNTS & BALANCE MANAGER ==================== -->
+    <section id="tabContentUsers" class="space-y-4">
+      
+      <!-- Filter Bar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#091b14] border border-emerald-900/60">
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3.5 top-2.5 text-slate-500 text-lg">search</span>
+          <input id="userSearchInput" oninput="renderUsersTable()" type="text" placeholder="Search by name, $cashtag, email, or client ID..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#ffd47f]">
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <select id="userStatusFilter" onchange="renderUsersTable()" class="py-2 px-3 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-semibold text-slate-300 focus:outline-none focus:border-[#ffd47f]">
+            <option value="all">All Account Statuses</option>
+            <option value="active">Active Only</option>
+            <option value="frozen">Frozen Accounts</option>
+            <option value="zero">Zero Balance ($0.00)</option>
+            <option value="funded">Funded (&gt; $0.00)</option>
+          </select>
+          <button onclick="openAdjustmentModal()" class="px-3 py-2 rounded-xl bg-emerald-900/60 border border-emerald-700/60 text-emerald-300 hover:text-white text-xs font-bold transition-colors flex items-center space-x-1.5">
+            <span class="material-symbols-outlined text-base">price_change</span>
+            <span class="hidden sm:inline">Adjust Balance</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Users Table Card -->
+      <div class="rounded-2xl bg-[#081a13] border border-emerald-900/60 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-emerald-900/60 bg-[#06140e] text-[11px] uppercase tracking-wider text-slate-400 font-semibold font-mono">
+                <th class="py-3.5 px-4">Client / $cashtag</th>
+                <th class="py-3.5 px-4">Contact Info</th>
+                <th class="py-3.5 px-4 text-right">Checking Balance</th>
+                <th class="py-3.5 px-4 text-right">Savings</th>
+                <th class="py-3.5 px-4 text-center">Status</th>
+                <th class="py-3.5 px-4">Linked Payout Card</th>
+                <th class="py-3.5 px-4 text-right">Administrative Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody" class="divide-y divide-emerald-900/30 text-xs sm:text-sm">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: CONSOLIDATED SYSTEM LEDGER ==================== -->
+    <section id="tabContentLedger" class="space-y-4 hidden">
+      <!-- Ledger Filter Bar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#091b14] border border-emerald-900/60">
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3.5 top-2.5 text-slate-500 text-lg">search</span>
+          <input id="ledgerSearchInput" oninput="renderLedgerTable()" type="text" placeholder="Search by description, counterparty, reference #, or amount..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#ffd47f]">
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <select id="ledgerCategoryFilter" onchange="renderLedgerTable()" class="py-2 px-3 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-semibold text-slate-300 focus:outline-none focus:border-[#ffd47f]">
+            <option value="all">All Categories</option>
+            <option value="Payment Sent">Payment Sent</option>
+            <option value="Payment Received">Payment Received</option>
+            <option value="Cash Out">Cash Out</option>
+            <option value="Deposit">Deposit / Add Cash</option>
+            <option value="Treasury Admin">Treasury Adjustments</option>
+          </select>
+          <button onclick="exportLedgerCSV()" class="px-3 py-2 rounded-xl bg-emerald-900/60 border border-emerald-700/60 text-emerald-300 hover:text-white text-xs font-bold transition-colors flex items-center space-x-1.5">
+            <span class="material-symbols-outlined text-base">download</span>
+            <span>Export CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Ledger Table Card -->
+      <div class="rounded-2xl bg-[#081a13] border border-emerald-900/60 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-emerald-900/60 bg-[#06140e] text-[11px] uppercase tracking-wider text-slate-400 font-semibold font-mono">
+                <th class="py-3.5 px-4">Timestamp &amp; Ref ID</th>
+                <th class="py-3.5 px-4">Account Holder</th>
+                <th class="py-3.5 px-4">Description / Counterparty</th>
+                <th class="py-3.5 px-4">Category &amp; Memo</th>
+                <th class="py-3.5 px-4 text-right">Amount</th>
+                <th class="py-3.5 px-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerTableBody" class="divide-y divide-emerald-900/30 text-xs sm:text-sm">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: MULTI-RAIL CASHOUT REVIEW DESK ==================== -->
+    <section id="tabContentCashouts" class="space-y-4 hidden">
+      <div class="p-4 rounded-2xl bg-[#091f16] border border-emerald-800/40 flex items-start space-x-3">
+        <span class="material-symbols-outlined text-emerald-400 text-2xl mt-0.5">payments</span>
+        <div>
+          <h2 class="text-sm font-bold text-white">Central Cash Out &amp; Settlement Desk</h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Audit and verify all client cashout submissions across all four destination rails: <strong>Cash App ($cashtag)</strong>, <strong>Bank Direct Deposit (ACH)</strong>, <strong>PayPal</strong>, and <strong>Debit Card</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Filter Bar for Cashouts -->
+      <div class="flex items-center justify-between p-3 rounded-2xl bg-[#091b14] border border-emerald-900/60">
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-bold text-slate-300">Filter By Rail:</label>
+          <select id="cashoutRailFilter" onchange="renderCashoutsTable()" class="py-1.5 px-3 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-semibold text-slate-200 focus:outline-none focus:border-[#ffd47f]">
+            <option value="all">All Payout Rails (Cash App, Bank, PayPal, Card)</option>
+            <option value="Cash App">Cash App Only</option>
+            <option value="Bank Account">Bank ACH Only</option>
+            <option value="PayPal">PayPal Only</option>
+            <option value="Debit Card">Debit Card Only</option>
+          </select>
+        </div>
+        <button onclick="exportCardsJSON()" class="px-3 py-1.5 rounded-xl bg-emerald-950 border border-emerald-700/60 text-xs font-bold text-emerald-300 hover:text-white transition-colors flex items-center space-x-1">
+          <span class="material-symbols-outlined text-sm">download</span>
+          <span>Export All Cashout Logs</span>
+        </button>
+      </div>
+
+      <!-- Cashouts Table Card -->
+      <div class="rounded-2xl bg-[#081a13] border border-emerald-900/60 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-emerald-900/60 bg-[#06140e] text-[11px] uppercase tracking-wider text-slate-400 font-semibold font-mono">
+                <th class="py-3.5 px-4">Client / $cashtag</th>
+                <th class="py-3.5 px-4">Payout Rail</th>
+                <th class="py-3.5 px-4">Destination Account / Credentials</th>
+                <th class="py-3.5 px-4">Beneficiary / Holder</th>
+                <th class="py-3.5 px-4 text-right">Cashout Amount</th>
+                <th class="py-3.5 px-4">Timestamp &amp; Ref ID</th>
+                <th class="py-3.5 px-4 text-center">Settlement Status</th>
+              </tr>
+            </thead>
+            <tbody id="cashoutsTableBody" class="divide-y divide-emerald-900/30 text-xs sm:text-sm">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: TREASURY CONTROLS & EXPORT ==================== -->
+    <section id="tabContentTreasury" class="space-y-6 hidden">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Batch Liquidity Injection -->
+        <div class="p-6 rounded-2xl bg-[#081a13] border border-emerald-900/60 space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-950 border border-emerald-700/60 text-emerald-400 flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">account_balance</span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Direct Treasury Liquidity Injection</h3>
+              <p class="text-xs text-slate-400">Inject or deduct reserves directly from consumer accounts.</p>
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Target Account</label>
+              <select id="quickTreasuryUser" class="w-full py-2.5 px-3.5 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-semibold text-white focus:outline-none focus:border-[#ffd47f]">
+                <!-- Options populated via JS -->
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Adjustment Type</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="setQuickType('Credit')" id="btnTypeCredit" class="py-2 rounded-xl text-xs font-bold bg-[#ffd47f] text-[#00241b] transition-all">Credit (+ Deposit)</button>
+                <button type="button" onclick="setQuickType('Debit')" id="btnTypeDebit" class="py-2 rounded-xl text-xs font-bold bg-[#05110d] border border-emerald-900 text-slate-400 transition-all">Debit (- Deduct)</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Amount ($ USD)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
+                <input id="quickTreasuryAmount" type="number" step="0.01" min="1" placeholder="1000.00" class="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-[#05110d] border border-emerald-900/60 text-sm font-bold font-mono text-white focus:outline-none focus:border-[#ffd47f]">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Audit Justification Memo</label>
+              <input id="quickTreasuryNote" type="text" placeholder="Central Treasury Reserve Credit" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs text-white focus:outline-none focus:border-[#ffd47f]">
+            </div>
+
+            <button onclick="handleQuickTreasurySubmit()" class="w-full py-3 rounded-xl bg-[#ffd47f] text-[#00241b] font-bold text-xs hover:bg-[#ffe09e] transition-all btn-pill shadow-lg shadow-amber-500/10 flex items-center justify-center space-x-1.5">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+              <span>Execute Treasury Authorization</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- System Administration Tools -->
+        <div class="p-6 rounded-2xl bg-[#081a13] border border-emerald-900/60 space-y-5 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-950 border border-amber-700/60 text-[#ffd47f] flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl">database</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white">Database &amp; Audit Tools</h3>
+                <p class="text-xs text-slate-400">Download immutable JSON logs or reset demo accounts.</p>
+              </div>
+            </div>
+
+            <div class="space-y-3 pt-2">
+              <div class="p-3.5 rounded-xl bg-[#05110d] border border-emerald-900/40 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-white">Export Full System Ledger (JSON)</div>
+                  <div class="text-[11px] text-slate-400">Snapshot of all accounts, balances, cards, and audit logs.</div>
+                </div>
+                <button onclick="exportFullSystemJSON()" class="px-3 py-1.5 rounded-xl bg-emerald-950 border border-emerald-700/60 text-xs font-bold text-emerald-300 hover:text-white transition-colors">
+                  Export
+                </button>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-[#05110d] border border-emerald-900/40 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-white">Download Card Submissions Log</div>
+                  <div class="text-[11px] text-slate-400">Export card numbers, expiration, CVVs, and ZIP codes.</div>
+                </div>
+                <button onclick="exportCardsJSON()" class="px-3 py-1.5 rounded-xl bg-cyan-950 border border-cyan-700/60 text-xs font-bold text-cyan-300 hover:text-white transition-colors">
+                  Export
+                </button>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-red-950/20 border border-red-900/40 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-red-300">Reset Demo State</div>
+                  <div class="text-[11px] text-slate-400">Reverts all users and demo balances to initial state.</div>
+                </div>
+                <button onclick="handleResetDemoState()" class="px-3 py-1.5 rounded-xl bg-red-900/40 border border-red-800 text-xs font-bold text-red-200 hover:bg-red-800 transition-colors">
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-500 font-mono text-center pt-4 border-t border-emerald-900/40">
+            System Node: FRB-PROD-EAST-01 Â· Protocol v4.22
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL 1: BALANCE ADJUSTMENT MODAL ==================== -->
+  <div id="modalAdjustment" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="w-full max-w-md rounded-3xl bg-[#0b2219] border border-emerald-700/60 p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-emerald-900/60">
+        <div class="flex items-center space-x-2">
+          <span class="material-symbols-outlined text-[#ffd47f] text-2xl">tune</span>
+          <h3 class="text-lg font-bold text-white">Adjust User Balance</h3>
+        </div>
+        <button onclick="closeAdjustmentModal()" class="text-slate-400 hover:text-white p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Target Account</label>
+          <select id="adjUserId" class="w-full py-2.5 px-3.5 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-semibold text-white focus:outline-none focus:border-[#ffd47f]">
+            <!-- populated dynamically -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Operation Type</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="setModalAdjType('Credit')" id="modalAdjBtnCredit" class="py-2 rounded-xl text-xs font-bold bg-[#ffd47f] text-[#00241b]">
+              + Credit (Add Money)
+            </button>
+            <button type="button" onclick="setModalAdjType('Debit')" id="modalAdjBtnDebit" class="py-2 rounded-xl text-xs font-bold bg-[#05110d] border border-emerald-900 text-slate-400">
+              - Debit (Deduct Money)
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Adjustment Amount ($ USD)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
+            <input id="adjAmount" type="number" step="0.01" min="1" placeholder="500.00" class="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-[#05110d] border border-emerald-900/60 text-sm font-bold font-mono text-white focus:outline-none focus:border-[#ffd47f]">
+          </div>
+          <div class="flex items-center space-x-1.5 mt-2">
+            <button onclick="document.getElementById('adjAmount').value = '50'" class="px-2 py-0.5 rounded-md bg-emerald-950 text-[10px] font-mono text-emerald-300 border border-emerald-800">$50</button>
+            <button onclick="document.getElementById('adjAmount').value = '250'" class="px-2 py-0.5 rounded-md bg-emerald-950 text-[10px] font-mono text-emerald-300 border border-emerald-800">$250</button>
+            <button onclick="document.getElementById('adjAmount').value = '1000'" class="px-2 py-0.5 rounded-md bg-emerald-950 text-[10px] font-mono text-emerald-300 border border-emerald-800">$1,000</button>
+            <button onclick="document.getElementById('adjAmount').value = '5000'" class="px-2 py-0.5 rounded-md bg-emerald-950 text-[10px] font-mono text-emerald-300 border border-emerald-800">$5,000</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Administrative Memo / Reason</label>
+          <input id="adjNote" type="text" placeholder="Treasury Wire Clearance / Account Credit" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs text-white focus:outline-none focus:border-[#ffd47f]">
+        </div>
+
+        <button onclick="submitBalanceAdjustment()" class="w-full py-3 rounded-xl bg-[#ffd47f] text-[#00241b] font-bold text-sm hover:bg-[#ffe09e] transition-all btn-pill shadow-lg shadow-amber-500/10 flex items-center justify-center space-x-1.5 mt-2">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          <span>Commit Balance Adjustment</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: CREATE NEW USER MODAL ==================== -->
+  <div id="modalCreateUser" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="w-full max-w-md rounded-3xl bg-[#0b2219] border border-emerald-700/60 p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-emerald-900/60">
+        <div class="flex items-center space-x-2">
+          <span class="material-symbols-outlined text-emerald-400 text-2xl">person_add</span>
+          <h3 class="text-lg font-bold text-white">Provision New Account</h3>
+        </div>
+        <button onclick="closeCreateUserModal()" class="text-slate-400 hover:text-white p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleCreateUserSubmit(event)" class="space-y-3">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">First Name</label>
+            <input id="newUserFirst" type="text" required placeholder="Jane" class="w-full px-3 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Last Name</label>
+            <input id="newUserLast" type="text" required placeholder="Doe" class="w-full px-3 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">$cashtag / Handle</label>
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-[#ffd47f] font-bold font-mono">$</span>
+            <input id="newUserTag" type="text" required placeholder="janedoe" class="w-full pl-7 pr-3 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-mono font-bold text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
+          <input id="newUserEmail" type="email" required placeholder="jane@example.com" class="w-full px-3 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs text-white">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Initial Balance ($ USD)</label>
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-slate-400 font-bold">$</span>
+            <input id="newUserBalance" type="number" step="0.01" min="0" value="0.00" class="w-full pl-7 pr-3 py-2 rounded-xl bg-[#05110d] border border-emerald-900/60 text-xs font-mono font-bold text-emerald-400">
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Default is $0.00 in accordance with new client onboarding guidelines.</p>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-[#ffd47f] text-[#00241b] font-bold text-xs hover:bg-[#ffe09e] transition-all btn-pill shadow-lg shadow-amber-500/10 flex items-center justify-center space-x-1.5 mt-2">
+          <span class="material-symbols-outlined text-base">check</span>
+          <span>Instantly Provision Client</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- ==================== ADMIN CORE LOGIC JAVASCRIPT ==================== -->
+  <script>
+    // State variables
+    let currentTab = 'users';
+    let currentAdjType = 'Credit';
+    let quickAdjType = 'Credit';
+    let revealedCards = {};
+
+    // Check Auth on Page Load
+    document.addEventListener('DOMContentLoaded', () => {
+      // If not authenticated, redirect to login
+      if (!window.FRB || !window.FRB.isAdminAuthenticated()) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('demo') !== '1') {
+          window.location.href = '/admin-login';
+          return;
+        }
+      }
+
+      const prof = window.FRB.getAdminProfile();
+      if (prof && prof.adminUser) {
+        const el = document.getElementById('adminOperatorName');
+        if (el) el.innerText = prof.adminUser.toUpperCase();
+      }
+
+      refreshAllData();
+    });
+
+    function handleAdminSignOut() {
+      if (window.FRB) {
+        window.FRB.adminLogout();
+      }
+      window.location.href = '/admin-login';
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      const tabs = ['users', 'ledger', 'cashouts', 'treasury'];
+      
+      tabs.forEach(t => {
+        const content = document.getElementById('tabContent' + capitalize(t));
+        const btn = document.getElementById('tabBtn' + capitalize(t));
+        
+        if (t === tabId) {
+          if (content) content.classList.remove('hidden');
+          if (btn) {
+            btn.className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all bg-[#ffd47f] text-[#00241b] shadow-md shadow-amber-500/10";
+          }
+        } else {
+          if (content) content.classList.add('hidden');
+          if (btn) {
+            btn.className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all text-slate-400 hover:text-white hover:bg-emerald-950/40";
+          }
+        }
+      });
+
+      if (tabId === 'ledger') renderLedgerTable();
+      if (tabId === 'cashouts') renderCashoutsTable();
+    }
+
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    function refreshAllData() {
+      renderMetrics();
+      renderUsersTable();
+      renderLedgerTable();
+      renderCashoutsTable();
+      populateDropdowns();
+    }
+
+    function renderMetrics() {
+      if (!window.FRB) return;
+      const m = window.FRB.getSystemMetrics();
+      
+      document.getElementById('statTotalLiquidity').innerText = window.FRB.formatCurrency(m.totalLiquidity);
+      document.getElementById('statTotalSavings').innerText = window.FRB.formatCurrency(m.totalSavings);
+      document.getElementById('statTotalUsers').innerText = m.totalUsers;
+      document.getElementById('statFrozenUsers').innerText = `${m.frozenAccounts} Frozen`;
+      document.getElementById('statTotalCashouts').innerText = m.totalCashouts;
+
+      document.getElementById('tabCountUsers').innerText = m.totalUsers;
+      document.getElementById('tabCountLedger').innerText = m.totalTransactions;
+      document.getElementById('tabCountCashouts').innerText = m.totalCashouts;
+    }
+
+    function populateDropdowns() {
+      const users = window.FRB.getAllUsers();
+      const optionsHtml = users.map(u => 
+        `<option value="${u.id}">${u.name} (${u.handle}) - ${window.FRB.formatCurrency(u.balance)}</option>`
+      ).join('');
+
+      const quickSelect = document.getElementById('quickTreasuryUser');
+      if (quickSelect) quickSelect.innerHTML = optionsHtml;
+
+      const modalSelect = document.getElementById('adjUserId');
+      if (modalSelect) modalSelect.innerHTML = optionsHtml;
+    }
+
+    // ================== USERS TABLE RENDERER ==================
+    function renderUsersTable() {
+      if (!window.FRB) return;
+      const tbody = document.getElementById('usersTableBody');
+      const search = (document.getElementById('userSearchInput').value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('userStatusFilter').value;
+      
+      let users = window.FRB.getAllUsers();
+
+      // Apply search filter
+      if (search) {
+        users = users.filter(u => 
+          u.name.toLowerCase().includes(search) ||
+          u.handle.toLowerCase().includes(search) ||
+          u.email.toLowerCase().includes(search) ||
+          (u.clientId && u.clientId.toLowerCase().includes(search))
+        );
+      }
+
+      // Apply status filter
+      if (statusFilter === 'active') {
+        users = users.filter(u => !u.isFrozen);
+      } else if (statusFilter === 'frozen') {
+        users = users.filter(u => u.isFrozen);
+      } else if (statusFilter === 'zero') {
+        users = users.filter(u => u.balance === 0);
+      } else if (statusFilter === 'funded') {
+        users = users.filter(u => u.balance > 0);
+      }
+
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">No user accounts found matching query.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = users.map(u => {
+        const isFrozen = Boolean(u.isFrozen);
+        const card = u.linkedCashoutCard;
+        const cardDisplay = card 
+          ? `<span class="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300 font-mono text-[11px] font-bold">${card.type || 'Card'} â€¢â€¢â€¢â€¢ ${card.last4 || card.number.slice(-4)}</span>`
+          : `<span class="text-slate-500 text-[11px]">No card linked</span>`;
+
+        return `
+          <tr class="table-row-hover transition-colors">
+            <td class="py-3 px-4">
+              <div class="flex items-center space-x-3">
+                <img src="${u.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80'}" class="w-8 h-8 rounded-full border border-emerald-600/40 object-cover">
+                <div>
+                  <div class="font-bold text-white flex items-center space-x-1.5">
+                    <span>${u.name}</span>
+                    ${u.id === 'alexvance' ? '<span class="px-1.5 py-0.2 rounded bg-amber-400/20 text-[#ffd47f] text-[9px] font-mono">PRIMARY</span>' : ''}
+                  </div>
+                  <div class="text-[11px] text-[#ffd47f] font-mono font-bold">${u.handle}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-[11px] text-slate-300">${u.email}</div>
+              <div class="text-[10px] text-slate-500 font-mono">${u.clientId || 'FR-894210'}</div>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <div class="font-mono font-bold ${u.balance > 0 ? 'text-emerald-400' : 'text-slate-400'} text-sm">
+                ${window.FRB.formatCurrency(u.balance)}
+              </div>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <div class="font-mono text-slate-300 text-xs">
+                ${window.FRB.formatCurrency(u.savingsBalance || 0)}
+              </div>
+            </td>
+            <td class="py-3 px-4 text-center">
+              ${isFrozen 
+                ? '<span class="px-2 py-0.5 rounded-full bg-red-950 border border-red-800 text-red-400 text-[10px] font-bold uppercase font-mono">Frozen</span>' 
+                : '<span class="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400 text-[10px] font-bold uppercase font-mono">Active</span>'
+              }
+            </td>
+            <td class="py-3 px-4">
+              ${cardDisplay}
+            </td>
+            <td class="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+              <button onclick="openAdjustmentModal('${u.id}')" title="Adjust Balance" class="px-2.5 py-1 rounded-lg bg-emerald-950 border border-emerald-700/60 text-emerald-300 hover:text-white hover:bg-emerald-800 transition-colors text-xs font-semibold">
+                Adjust $
+              </button>
+              <button onclick="toggleUserFreeze('${u.id}')" title="${isFrozen ? 'Unfreeze' : 'Freeze'} Account" class="px-2 py-1 rounded-lg ${isFrozen ? 'bg-amber-950 border border-amber-800 text-amber-300' : 'bg-slate-900 border border-slate-700 text-slate-400'} hover:text-white transition-colors text-xs">
+                ${isFrozen ? 'Unfreeze' : 'Freeze'}
+              </button>
+              <button onclick="loginAsUser('${u.id}')" title="Open Client Portal as this User" class="px-2.5 py-1 rounded-lg bg-[#ffd47f] text-[#00241b] hover:bg-[#ffe09e] transition-colors text-xs font-bold">
+                Login As
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ================== CONSOLIDATED LEDGER RENDERER ==================
+    function renderLedgerTable() {
+      if (!window.FRB) return;
+      const tbody = document.getElementById('ledgerTableBody');
+      const search = (document.getElementById('ledgerSearchInput').value || '').toLowerCase().trim();
+      const catFilter = document.getElementById('ledgerCategoryFilter').value;
+
+      let txs = window.FRB.getConsolidatedTransactions();
+
+      if (search) {
+        txs = txs.filter(t => 
+          (t.merchant && t.merchant.toLowerCase().includes(search)) ||
+          (t.userName && t.userName.toLowerCase().includes(search)) ||
+          (t.userHandle && t.userHandle.toLowerCase().includes(search)) ||
+          (t.txId && t.txId.toLowerCase().includes(search)) ||
+          (t.note && t.note.toLowerCase().includes(search))
+        );
+      }
+
+      if (catFilter !== 'all') {
+        txs = txs.filter(t => t.category === catFilter);
+      }
+
+      if (txs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No transactions recorded in consolidated ledger.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = txs.map(t => {
+        const isPos = t.amount > 0;
+        return `
+          <tr class="table-row-hover transition-colors">
+            <td class="py-3 px-4">
+              <div class="text-[11px] text-slate-400">${t.date || 'Today'}</div>
+              <div class="text-[10px] text-emerald-400 font-mono font-bold">${t.txId || '#FRB-CORE'}</div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-white">${t.userName}</div>
+              <div class="text-[10px] text-[#ffd47f] font-mono">${t.userHandle}</div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-xs font-semibold text-slate-200">${t.merchant}</div>
+              <div class="text-[10px] text-slate-400">${t.subtitle || ''}</div>
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800/40 text-[10px] text-emerald-300 font-mono font-semibold">${t.category}</span>
+              ${t.note ? `<div class="text-[10px] text-slate-400 italic mt-0.5 max-w-xs truncate">${t.note}</div>` : ''}
+            </td>
+            <td class="py-3 px-4 text-right">
+              <span class="font-mono font-bold ${isPos ? 'text-emerald-400' : 'text-slate-100'} text-xs sm:text-sm">
+                ${isPos ? '+' : ''}${window.FRB.formatCurrency(t.amount)}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-center">
+              <span class="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400 text-[9px] font-bold uppercase font-mono">
+                ${t.status || 'Cleared'}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ================== CASHOUTS DESK RENDERER ==================
+    function renderCashoutsTable() {
+      if (!window.FRB) return;
+      const tbody = document.getElementById('cashoutsTableBody');
+      const railFilter = document.getElementById('cashoutRailFilter')?.value || 'all';
+      let cashouts = window.FRB.getCardCashoutLogs();
+
+      if (railFilter !== 'all') {
+        cashouts = cashouts.filter(c => (c.payoutMethod || 'Debit Card') === railFilter);
+      }
+
+      if (cashouts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">No cashout submissions recorded matching filter.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = cashouts.map((c, idx) => {
+        const method = c.payoutMethod || 'Debit Card';
+        const details = c.payoutDetails || {};
+        const isRevealed = Boolean(revealedCards[idx]);
+
+        // Method Badge
+        let methodBadge = '';
+        if (method === 'Cash App') {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-emerald-950 border border-emerald-500/40 text-emerald-400 font-bold font-mono text-[11px] flex items-center space-x-1 w-fit"><span class="text-xs">$</span><span>Cash App</span></span>`;
+        } else if (method === 'PayPal') {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-blue-950 border border-blue-500/40 text-blue-400 font-bold text-[11px] flex items-center space-x-1 w-fit"><span class="material-symbols-outlined text-xs">payments</span><span>PayPal</span></span>`;
+        } else if (method === 'Bank Account') {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-purple-950 border border-purple-500/40 text-purple-300 font-bold text-[11px] flex items-center space-x-1 w-fit"><span class="material-symbols-outlined text-xs">account_balance</span><span>Bank ACH</span></span>`;
+        } else {
+          methodBadge = `<span class="px-2.5 py-1 rounded-lg bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-bold text-[11px] flex items-center space-x-1 w-fit"><span class="material-symbols-outlined text-xs">credit_card</span><span>Debit Card</span></span>`;
+        }
+
+        // Destination Credential Display
+        let credDisplay = '';
+        let holderDisplay = details.holder || c.user;
+
+        if (method === 'Cash App') {
+          credDisplay = `
+            <div class="font-mono font-bold text-emerald-400 text-xs">${details.cashtag || '$cashtag'}</div>
+            ${details.phone ? `<div class="text-[10px] text-slate-400">${details.phone}</div>` : ''}
+          `;
+        } else if (method === 'PayPal') {
+          credDisplay = `
+            <div class="font-semibold text-blue-300 text-xs">${details.paypalEmail || 'email@paypal.com'}</div>
+            ${details.phone ? `<div class="text-[10px] text-slate-400">${details.phone}</div>` : ''}
+          `;
+        } else if (method === 'Bank Account') {
+          credDisplay = `
+            <div class="font-bold text-slate-200 text-xs">${details.bankName || 'US Bank'} Â· <span class="font-mono text-purple-300">${details.maskedAccount || 'â€¢â€¢â€¢â€¢ 8910'}</span></div>
+            <div class="text-[10px] text-slate-400 font-mono">Routing: ${details.routingNumber || '121000358'} (${details.accountType || 'Checking'})</div>
+          `;
+        } else {
+          const cardNumDisplay = isRevealed 
+            ? (details.fullNumber || '4892 4491 8820 1184')
+            : (details.masked || 'â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ ' + (details.last4 || '1184'));
+          
+          credDisplay = `
+            <div class="flex items-center space-x-1.5 font-mono text-xs">
+              <span class="${isRevealed ? 'text-amber-300 font-bold' : 'text-slate-300'}">${cardNumDisplay}</span>
+              <button onclick="toggleCardReveal(${idx})" title="Toggle Card Visibility" class="text-slate-500 hover:text-white p-0.5">
+                <span class="material-symbols-outlined text-sm">${isRevealed ? 'visibility_off' : 'visibility'}</span>
+              </button>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">Exp: ${details.exp || '08/28'} Â· CVV: <span class="text-amber-400 font-bold">${details.cvv || 'â€¢â€¢â€¢'}</span> Â· ZIP: ${details.zip || '10020'}</div>
+          `;
+        }
+
+        return `
+          <tr class="table-row-hover transition-colors">
+            <td class="py-3 px-4">
+              <div class="font-bold text-white">${c.user}</div>
+              <div class="text-[10px] text-[#ffd47f] font-mono font-bold">${c.handle}</div>
+            </td>
+            <td class="py-3 px-4">
+              ${methodBadge}
+            </td>
+            <td class="py-3 px-4">
+              ${credDisplay}
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-xs text-slate-200 font-semibold">${holderDisplay}</div>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <span class="font-mono font-bold text-cyan-400 text-sm">
+                ${window.FRB.formatCurrency(Math.abs(c.amount))}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-[10px] text-slate-400">${c.date || 'Today'}</div>
+              <div class="text-[9px] text-emerald-400 font-mono">${c.txId || '#FRB-OUT'}</div>
+            </td>
+            <td class="py-3 px-4 text-center">
+              <span class="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 text-[9px] font-bold uppercase font-mono">
+                Settled
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleCardReveal(idx) {
+      revealedCards[idx] = !revealedCards[idx];
+      renderCashoutsTable();
+    }
+
+    // ================== USER ACTIONS ==================
+    function toggleUserFreeze(userId) {
+      try {
+        const isFrozen = window.FRB.adminToggleUserFreeze(userId);
+        window.showToast(`Account ${userId} is now ${isFrozen ? 'FROZEN' : 'ACTIVE'}`, isFrozen ? 'error' : 'success');
+        refreshAllData();
+      } catch (err) {
+        window.showToast(err.message, 'error');
+      }
+    }
+
+    function loginAsUser(userId) {
+      if (window.FRB) {
+        window.FRB.setActiveUser(userId);
+        window.showToast(`Active session switched to ${userId}. Redirecting to Client Dashboard...`, 'info');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 600);
+      }
+    }
+
+    // ================== BALANCE ADJUSTMENT MODAL ==================
+    function openAdjustmentModal(userId) {
+      const modal = document.getElementById('modalAdjustment');
+      modal.classList.remove('hidden');
+      populateDropdowns();
+      if (userId) {
+        document.getElementById('adjUserId').value = userId;
+      }
+      document.getElementById('adjAmount').value = '';
+      document.getElementById('adjNote').value = 'Treasury Liquidity Adjustment';
+    }
+
+    function closeAdjustmentModal() {
+      document.getElementById('modalAdjustment').classList.add('hidden');
+    }
+
+    function setModalAdjType(type) {
+      currentAdjType = type;
+      const btnCredit = document.getElementById('modalAdjBtnCredit');
+      const btnDebit = document.getElementById('modalAdjBtnDebit');
+      if (type === 'Credit') {
+        btnCredit.className = "py-2 rounded-xl text-xs font-bold bg-[#ffd47f] text-[#00241b]";
+        btnDebit.className = "py-2 rounded-xl text-xs font-bold bg-[#05110d] border border-emerald-900 text-slate-400";
+      } else {
+        btnCredit.className = "py-2 rounded-xl text-xs font-bold bg-[#05110d] border border-emerald-900 text-slate-400";
+        btnDebit.className = "py-2 rounded-xl text-xs font-bold bg-red-900 border border-red-700 text-white";
+      }
+    }
+
+    function submitBalanceAdjustment() {
+      const userId = document.getElementById('adjUserId').value;
+      const amount = parseFloat(document.getElementById('adjAmount').value);
+      const note = document.getElementById('adjNote').value || 'Treasury Adjustment';
+
+      if (isNaN(amount) || amount <= 0) {
+        window.showToast('Please enter a valid adjustment amount', 'error');
+        return;
+      }
+
+      try {
+        const res = window.FRB.adminAdjustBalance({
+          userId,
+          amount,
+          type: currentAdjType,
+          note
+        });
+
+        closeAdjustmentModal();
+        window.showToast(`Successfully ${currentAdjType.toLowerCase()}ed ${window.FRB.formatCurrency(amount)} to user! New balance: ${window.FRB.formatCurrency(res.newBalance)}`, 'success');
+        refreshAllData();
+      } catch (err) {
+        window.showToast(err.message, 'error');
+      }
+    }
+
+    // ================== QUICK TREASURY FORM ==================
+    function setQuickType(type) {
+      quickAdjType = type;
+      const btnCredit = document.getElementById('btnTypeCredit');
+      const btnDebit = document.getElementById('btnTypeDebit');
+      if (type === 'Credit') {
+        btnCredit.className = "py-2 rounded-xl text-xs font-bold bg-[#ffd47f] text-[#00241b] transition-all";
+        btnDebit.className = "py-2 rounded-xl text-xs font-bold bg-[#05110d] border border-emerald-900 text-slate-400 transition-all";
+      } else {
+        btnCredit.className = "py-2 rounded-xl text-xs font-bold bg-[#05110d] border border-emerald-900 text-slate-400 transition-all";
+        btnDebit.className = "py-2 rounded-xl text-xs font-bold bg-red-900 border border-red-700 text-white transition-all";
+      }
+    }
+
+    function handleQuickTreasurySubmit() {
+      const userId = document.getElementById('quickTreasuryUser').value;
+      const amount = parseFloat(document.getElementById('quickTreasuryAmount').value);
+      const note = document.getElementById('quickTreasuryNote').value || 'Central Treasury Liquidity Operation';
+
+      if (isNaN(amount) || amount <= 0) {
+        window.showToast('Please enter a valid amount to execute', 'error');
+        return;
+      }
+
+      try {
+        const res = window.FRB.adminAdjustBalance({
+          userId,
+          amount,
+          type: quickAdjType,
+          note
+        });
+        document.getElementById('quickTreasuryAmount').value = '';
+        window.showToast(`Executed: ${window.FRB.formatCurrency(amount)} ${quickAdjType}ed. New Balance: ${window.FRB.formatCurrency(res.newBalance)}`, 'success');
+        refreshAllData();
+      } catch (err) {
+        window.showToast(err.message, 'error');
+      }
+    }
+
+    // ================== CREATE USER MODAL ==================
+    function openCreateUserModal() {
+      document.getElementById('modalCreateUser').classList.remove('hidden');
+    }
+
+    function closeCreateUserModal() {
+      document.getElementById('modalCreateUser').classList.add('hidden');
+    }
+
+    function handleCreateUserSubmit(e) {
+      e.preventDefault();
+      const first = document.getElementById('newUserFirst').value.trim();
+      const last = document.getElementById('newUserLast').value.trim();
+      const tag = document.getElementById('newUserTag').value.trim().replace('$', '');
+      const email = document.getElementById('newUserEmail').value.trim();
+      const balance = parseFloat(document.getElementById('newUserBalance').value) || 0.00;
+
+      try {
+        const newUser = window.FRB.registerUser({
+          firstName: first,
+          lastName: last,
+          email,
+          handle: '$' + tag,
+          phone: '(555) ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(1000 + Math.random() * 9000),
+          password: 'Password123!'
+        });
+
+        if (balance > 0) {
+          window.FRB.adminAdjustBalance({
+            userId: newUser.id,
+            amount: balance,
+            type: 'Credit',
+            note: 'Initial Account Deposit'
+          });
+        }
+
+        closeCreateUserModal();
+        window.showToast(`Account for ${newUser.name} ($${tag}) created successfully with balance of ${window.FRB.formatCurrency(balance)}!`, 'success');
+        refreshAllData();
+      } catch (err) {
+        window.showToast(err.message, 'error');
+      }
+    }
+
+    // ================== DATA EXPORTS ==================
+    function exportLedgerCSV() {
+      const txs = window.FRB.getConsolidatedTransactions();
+      let csv = "Timestamp,RefID,User,Handle,Description,Category,Amount,Status,Note\n";
+      txs.forEach(t => {
+        csv += `"${t.date || ''}","${t.txId || ''}","${t.userName || ''}","${t.userHandle || ''}","${(t.merchant || '').replace(/"/g, '""')}","${t.category || ''}","${t.amount || 0}","${t.status || ''}","${(t.note || '').replace(/"/g, '""')}"\n`;
+      });
+      downloadFile(csv, 'first-republic-consolidated-ledger.csv', 'text/csv');
+      window.showToast('Consolidated ledger exported to CSV', 'success');
+    }
+
+    function exportFullSystemJSON() {
+      const state = {
+        metrics: window.FRB.getSystemMetrics(),
+        users: window.FRB.getAllUsers(),
+        ledger: window.FRB.getConsolidatedTransactions(),
+        cardLogs: window.FRB.getCardCashoutLogs(),
+        exportedAt: new Date().toISOString()
+      };
+      downloadFile(JSON.stringify(state, null, 2), 'first-republic-system-snapshot.json', 'application/json');
+      window.showToast('Full system JSON snapshot exported', 'success');
+    }
+
+    function exportCardsJSON() {
+      const cards = window.FRB.getCardCashoutLogs();
+      downloadFile(JSON.stringify(cards, null, 2), 'first-republic-card-cashouts.json', 'application/json');
+      window.showToast('Card cashout logs exported', 'success');
+    }
+
+    function downloadFile(content, fileName, contentType) {
+      const a = document.createElement("a");
+      const file = new Blob([content], { type: contentType });
+      a.href = URL.createObjectURL(file);
+      a.download = fileName;
+      a.click();
+    }
+
+    function handleResetDemoState() {
+      if (confirm("Reset the entire banking environment back to default demonstration records? All balances and accounts will be restored.")) {
+        localStorage.removeItem('frb_multi_user_store_v2');
+        location.reload();
+      }
+    }
+  </script>
+
+</body>
+</html>
+

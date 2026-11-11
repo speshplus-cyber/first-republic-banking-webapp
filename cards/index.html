@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>First Republic Bank - Visa Infinite Metal Card</title>
+  
+  <!-- Modern Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/custom.css"/>
+  <script src="/js/state.js"></script>
+  <script src="/js/components.js"></script>
+</head>
+<body class="bg-[#f8faf9] text-slate-900 font-sans antialiased min-h-screen pb-24 md:pb-12">
+
+  <!-- TOP APP BAR -->
+  <header id="site-header" class="bg-white border-b border-slate-200/80 sticky top-0 z-40"></header>
+
+  <!-- MAIN CANVAS -->
+  <main class="max-w-xl mx-auto px-4 pt-5 pb-8 space-y-4">
+
+    <!-- HEADER TITLE & LOCK STATUS PILL -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Card &amp; Security</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Visa InfiniteÂ® Solid Metal Debit</p>
+      </div>
+      <div id="cardStatusBadge" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold shadow-sm">
+        <span id="cardStatusDot" class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+        <span id="cardStatusText">Active &amp; Ready</span>
+      </div>
+    </div>
+
+    <!-- TACTILE SOLID METAL CARD (Cash App / Apple Card style) -->
+    <div id="metalCardVisual" class="relative overflow-hidden rounded-3xl metal-card-gradient text-white p-6 sm:p-7 shadow-2xl transition-all duration-300">
+      
+      <!-- Card Top: Brand & Contactless -->
+      <div class="flex items-start justify-between relative z-10">
+        <div>
+          <span class="font-serif font-bold text-lg sm:text-xl foil-gold block tracking-wide">First Republic</span>
+          <span class="text-[9px] uppercase tracking-widest text-[#ffd47f] font-semibold">Private Client</span>
+        </div>
+        <div class="flex items-center space-x-1.5 text-slate-300">
+          <span class="material-symbols-outlined text-2xl" style="transform: rotate(90deg);">contactless</span>
+          <span class="text-[9px] font-extrabold uppercase tracking-widest px-1.5 py-0.5 rounded bg-white/10 text-white border border-white/20">METAL</span>
+        </div>
+      </div>
+
+      <!-- EMV Chip & Monogram Row -->
+      <div class="my-6 flex items-center justify-between relative z-10">
+        <div class="w-12 h-9 rounded-lg chip-gold p-0.5 shadow-md border border-[#ffd47f]/40 relative overflow-hidden flex flex-col justify-around">
+          <div class="w-full h-px bg-amber-950/40"></div>
+          <div class="w-full h-px bg-amber-950/40"></div>
+          <div class="w-3/4 mx-auto h-3 rounded border border-amber-950/30"></div>
+        </div>
+        <div class="text-right">
+          <span class="text-[9px] uppercase tracking-wider text-slate-400 block font-semibold">Member Since</span>
+          <span class="text-xs font-bold text-white tracking-wider">2014</span>
+        </div>
+      </div>
+
+      <!-- Card Number & CVV -->
+      <div class="mb-4 relative z-10">
+        <div class="text-lg sm:text-xl font-bold font-mono tracking-widest text-white select-all" id="cardDigitsDisplay">
+          â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 1184
+        </div>
+        <div class="flex items-center space-x-3 mt-1 text-xs text-slate-400">
+          <span>CVV: <strong class="text-white font-mono" id="cardCvvDisplay">â€¢â€¢â€¢</strong></span>
+          <span>â€¢</span>
+          <span>Exp: <strong class="text-white font-mono">08/28</strong></span>
+        </div>
+      </div>
+
+      <!-- Cardholder Name & Visa Infinite Logo -->
+      <div class="flex items-end justify-between border-t border-white/10 pt-3 relative z-10">
+        <div>
+          <span class="text-[9px] uppercase text-slate-400 font-semibold tracking-wider block">Cardholder</span>
+          <span class="text-xs sm:text-sm font-bold foil-gold uppercase tracking-wider" id="cardHolderDisplay">Alexander M. Vance</span>
+        </div>
+        <div class="text-right">
+          <span class="font-serif italic text-xl font-extrabold text-white block leading-none">VISA</span>
+          <span class="text-[9px] uppercase tracking-widest text-[#ffd47f] font-bold">Infinite</span>
+        </div>
+      </div>
+
+      <!-- FROZEN OVERLAY (When card is locked) -->
+      <div id="cardFrozenOverlay" class="absolute inset-0 bg-slate-900/90 backdrop-blur-md z-20 hidden flex-col items-center justify-center p-6 text-center">
+        <span class="material-symbols-outlined text-4xl text-amber-400 mb-1">lock</span>
+        <h3 class="text-lg font-bold text-white">CARD FROZEN</h3>
+        <p class="text-xs text-slate-300 max-w-xs mt-1">Point-of-sale and online charges are currently blocked.</p>
+        <button onclick="toggleCardLock()" class="mt-4 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold btn-pill">
+          Unlock Card Now
+        </button>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS: VIEW DETAILS & APPLE WALLET -->
+    <div class="grid grid-cols-2 gap-2.5">
+      <button onclick="toggleCardDetails()" class="py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm btn-pill" id="viewDetailsBtn">
+        <span class="material-symbols-outlined text-lg text-emerald-800" id="viewDetailsIcon">visibility</span>
+        <span id="viewDetailsText">Show Numbers</span>
+      </button>
+
+      <button onclick="addToAppleWallet()" class="py-3 px-4 rounded-2xl bg-slate-950 text-white hover:bg-slate-900 text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm btn-pill">
+        <span class="material-symbols-outlined text-lg">wallet</span>
+        <span>Apple Wallet</span>
+      </button>
+    </div>
+
+    <!-- INSTANT CARD CONTROLS (Cash App style) -->
+    <div class="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm space-y-4">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Card Controls</h3>
+
+      <!-- Lock Card Toggle -->
+      <div class="flex items-center justify-between py-1">
+        <div>
+          <span class="text-xs sm:text-sm font-bold text-slate-900 block">Lock Card</span>
+          <span class="text-[11px] text-slate-500 block">Instantly block new purchases and ATM withdrawals</span>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+          <input type="checkbox" id="lockCardSwitch" onchange="toggleCardLock()" class="sr-only peer">
+          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+        </label>
+      </div>
+
+      <div class="border-t border-slate-100"></div>
+
+      <!-- International Travel Toggle -->
+      <div class="flex items-center justify-between py-1">
+        <div>
+          <span class="text-xs sm:text-sm font-bold text-slate-900 block">International Purchases</span>
+          <span class="text-[11px] text-slate-500 block">Zero foreign exchange transaction fees</span>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+          <input type="checkbox" id="intlSwitch" onchange="toggleFeature('international', this.checked)" class="sr-only peer" checked>
+          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00241b]"></div>
+        </label>
+      </div>
+
+      <div class="border-t border-slate-100"></div>
+
+      <!-- Online Purchases Toggle -->
+      <div class="flex items-center justify-between py-1">
+        <div>
+          <span class="text-xs sm:text-sm font-bold text-slate-900 block">Online &amp; Digital Payments</span>
+          <span class="text-[11px] text-slate-500 block">Encrypted 3D Secure verification</span>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+          <input type="checkbox" id="onlineSwitch" onchange="toggleFeature('online', this.checked)" class="sr-only peer" checked>
+          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00241b]"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- CASH APP STYLE BOOSTS / CASH BACK PERKS -->
+    <div class="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Exclusive Card Boosts</h3>
+        <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">Active</span>
+      </div>
+
+      <div class="space-y-2">
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">ðŸ¨</div>
+            <div>
+              <div class="text-xs font-bold text-slate-900">10% Off Luxury Hotels &amp; Resorts</div>
+              <div class="text-[10px] text-slate-400">Four Seasons, Ritz-Carlton, Aman</div>
+            </div>
+          </div>
+          <span class="text-xs font-extrabold text-emerald-700">10%</span>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">â˜•</div>
+            <div>
+              <div class="text-xs font-bold text-slate-900">$5 Off Any Coffee Purchase</div>
+              <div class="text-[10px] text-slate-400">Blue Bottle, Ralphâ€™s, DevociÃ³n</div>
+            </div>
+          </div>
+          <span class="text-xs font-extrabold text-amber-700">$5 OFF</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM FLOATING DOCK -->
+  <nav id="site-bottom-nav"></nav>
+
+  <!-- FULL DETAILS MODAL -->
+  <div id="card-details-sheet" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeCardDetailsSheet()"></div>
+    <div class="relative bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl z-10 drawer-slide-in">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900">Card Credentials</h3>
+        <button onclick="closeCardDetailsSheet()" class="text-slate-400 hover:text-slate-700 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-3 text-xs">
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-slate-400 font-semibold uppercase block">16-Digit Number</span>
+            <span class="font-mono text-base font-bold text-slate-900 tracking-wider" id="modalCardNumber">4892 7701 4482 1184</span>
+          </div>
+          <button onclick="copyToClipboard(document.getElementById('modalCardNumber').innerText.replace(/\s+/g,''), 'Card Number')" class="p-2 text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-200 transition-colors">
+            <span class="material-symbols-outlined text-base">content_copy</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-slate-400 font-semibold uppercase block">CVV</span>
+              <span class="font-mono text-base font-bold text-slate-900" id="modalCardCvv">849</span>
+            </div>
+            <button onclick="copyToClipboard(document.getElementById('modalCardCvv').innerText, 'CVV')" class="p-1.5 text-slate-600 hover:text-slate-900">
+              <span class="material-symbols-outlined text-base">content_copy</span>
+            </button>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="text-[10px] text-slate-400 font-semibold uppercase block">Expires</span>
+            <span class="font-mono text-base font-bold text-slate-900" id="modalCardExp">08/28</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+          <span class="text-[10px] text-slate-400 font-semibold uppercase block">Billing Zip Code</span>
+          <span class="text-xs font-bold text-slate-800">10020 (New York, NY)</span>
+        </div>
+
+        <button onclick="closeCardDetailsSheet()" class="w-full py-3 rounded-2xl bg-slate-900 text-white font-bold text-xs mt-2 btn-pill">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let areNumbersVisible = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.renderHeader('cards');
+      window.renderBottomNav('cards');
+      updateCardUI();
+    });
+
+    function updateCardUI() {
+      const card = window.FRB.state.card;
+      const user = window.FRB.state.user;
+
+      document.getElementById('cardHolderDisplay').innerText = user.name || 'Alexander M. Vance';
+      document.getElementById('cardDigitsDisplay').innerText = card.masked || 'â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 1184';
+      document.getElementById('cardCvvDisplay').innerText = 'â€¢â€¢â€¢';
+
+      // Update modal credentials
+      const modalNum = document.getElementById('modalCardNumber');
+      if (modalNum) modalNum.innerText = card.number || '4892 7701 4482 1184';
+      const modalCvv = document.getElementById('modalCardCvv');
+      if (modalCvv) modalCvv.innerText = card.cvv || '849';
+      const modalExp = document.getElementById('modalCardExp');
+      if (modalExp) modalExp.innerText = card.exp || '08/28';
+      
+      const isLocked = card.isLocked;
+      const visual = document.getElementById('metalCardVisual');
+      const frozenOverlay = document.getElementById('cardFrozenOverlay');
+      const lockSwitch = document.getElementById('lockCardSwitch');
+      const badge = document.getElementById('cardStatusBadge');
+      const dot = document.getElementById('cardStatusDot');
+      const text = document.getElementById('cardStatusText');
+
+      lockSwitch.checked = isLocked;
+
+      if (isLocked) {
+        visual.classList.add('metal-frozen');
+        frozenOverlay.classList.remove('hidden');
+        frozenOverlay.classList.add('flex');
+        badge.className = 'inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold shadow-sm';
+        dot.className = 'w-2 h-2 rounded-full bg-amber-600 animate-pulse';
+        text.innerText = 'Card Frozen';
+      } else {
+        visual.classList.remove('metal-frozen');
+        frozenOverlay.classList.add('hidden');
+        frozenOverlay.classList.remove('flex');
+        badge.className = 'inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold shadow-sm';
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-600 animate-pulse';
+        text.innerText = 'Active & Ready';
+      }
+
+      document.getElementById('intlSwitch').checked = card.international;
+      document.getElementById('onlineSwitch').checked = card.online;
+    }
+
+    function toggleCardLock() {
+      const isLocked = window.FRB.toggleCardFreeze();
+      updateCardUI();
+      window.showToast(isLocked ? 'Card frozen. Charges are blocked.' : 'Card unlocked and ready for use!');
+    }
+
+    function toggleFeature(feat, val) {
+      window.FRB.updateCardFeature(feat, val);
+      window.showToast(`${feat} permissions updated.`);
+    }
+
+    function toggleCardDetails() {
+      document.getElementById('card-details-sheet').classList.remove('hidden');
+    }
+
+    function closeCardDetailsSheet() {
+      document.getElementById('card-details-sheet').classList.add('hidden');
+    }
+
+    function addToAppleWallet() {
+      window.showToast('Adding First Republic Visa Infinite to Apple Wallet...', 'info');
+      setTimeout(() => {
+        window.showToast('Card added to Apple Wallet successfully!', 'success');
+      }, 1000);
+    }
+
+    function copyToClipboard(val, label) {
+      navigator.clipboard.writeText(val).then(() => {
+        window.showToast(`${label} copied to clipboard!`);
+      });
+    }
+  </script>
+</body>
+</html>
+

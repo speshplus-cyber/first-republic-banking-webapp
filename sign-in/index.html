@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>First Republic Bank - Log In</title>
+  
+  <!-- Modern Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/custom.css"/>
+  <script src="/js/state.js"></script>
+  <script src="/js/components.js"></script>
+</head>
+<body class="bg-[#f8faf9] text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between p-4">
+
+  <!-- Header -->
+  <header class="max-w-md mx-auto w-full py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-2.5">
+      <div class="w-8 h-8 rounded-xl bg-[#00241b] text-[#ffd47f] flex items-center justify-center font-bold shadow-sm">
+        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+      </div>
+      <div class="flex flex-col leading-none">
+        <span class="font-serif font-bold text-base text-[#00241b] tracking-tight">First Republic</span>
+        <span class="text-[9px] uppercase tracking-widest text-[#785a0e] font-semibold mt-0.5">Private Wealth</span>
+      </div>
+    </div>
+    <button onclick="window.openConciergeModal()" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center space-x-1">
+      <span class="material-symbols-outlined text-base text-[#785a0e]">support_agent</span>
+      <span class="hidden sm:inline">Concierge</span>
+    </button>
+  </header>
+
+  <!-- Login Main Card -->
+  <main class="max-w-md mx-auto w-full my-auto space-y-4">
+
+    <!-- Credentials Card -->
+    <div class="rounded-3xl bg-white border border-slate-200/80 p-6 sm:p-8 shadow-xl shadow-slate-200/50 space-y-5">
+      <div>
+        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Sign In</h1>
+        <p class="text-xs text-slate-500 mt-1">Access your First Republic accounts, payments &amp; card</p>
+      </div>
+
+      <!-- Quick demo login helper banners -->
+      <div class="space-y-1.5">
+        <div class="p-2.5 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-emerald-700 text-lg">account_circle</span>
+            <div>
+              <div class="text-xs font-bold text-slate-900">Alexander Vance</div>
+              <div class="text-[10px] text-slate-500">$alexvance Â· Sender</div>
+            </div>
+          </div>
+          <button onclick="fillUser('alexvance')" class="px-2.5 py-1 rounded-xl bg-[#00241b] text-white text-[11px] font-bold hover:bg-emerald-950 btn-pill">
+            Fill
+          </button>
+        </div>
+
+        <div class="p-2.5 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-slate-600 text-lg">account_circle</span>
+            <div>
+              <div class="text-xs font-bold text-slate-900">Julian Vance</div>
+              <div class="text-[10px] text-slate-500">$julianvance Â· Receiver</div>
+            </div>
+          </div>
+          <button onclick="fillUser('julianvance')" class="px-2.5 py-1 rounded-xl bg-slate-800 text-white text-[11px] font-bold hover:bg-slate-900 btn-pill">
+            Fill
+          </button>
+        </div>
+      </div>
+
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Username, $Cashtag, or Email</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-lg">person</span>
+            <input id="loginId" type="text" placeholder="alexvance or FR-9832014" required class="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold fintech-input" value="alexvance">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-xs font-bold text-slate-700">Password</label>
+            <button type="button" onclick="window.showToast('Reset link dispatched to registered email', 'info')" class="text-[11px] font-semibold text-emerald-800 hover:underline">
+              Forgot?
+            </button>
+          </div>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-lg">lock</span>
+            <input id="loginPassword" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required class="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold fintech-input" value="VanceWealth2024!">
+            <button type="button" onclick="togglePasswordVisibility()" class="material-symbols-outlined absolute right-3 top-3 text-slate-400 hover:text-slate-700 text-lg" id="pwdToggleIcon">
+              visibility
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2 space-y-2">
+          <button id="submitSignInBtn" type="submit" class="w-full py-3.5 rounded-2xl bg-[#00241b] text-white font-bold text-sm hover:bg-emerald-950 transition-all btn-pill shadow-lg shadow-emerald-950/20 flex items-center justify-center space-x-1.5">
+            <span>Log In</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </button>
+
+          <button type="button" onclick="handleBiometricQuickLogin()" class="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all btn-pill flex items-center justify-center space-x-2">
+            <span class="material-symbols-outlined text-emerald-700 text-lg" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+            <span>Face ID / Touch ID</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Registration Callout: Balance Starts at $0.00 -->
+    <div class="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm text-center space-y-2">
+      <div class="text-xs text-slate-600">New to First Republic?</div>
+      <a href="/register" class="block w-full py-3 rounded-2xl border-2 border-[#00241b] text-[#00241b] font-bold text-xs hover:bg-emerald-50 transition-all btn-pill">
+        Create an Account (Starts at $0.00)
+      </a>
+      <p class="text-[10px] text-slate-400">Zero fees Â· No minimum balance required Â· Instant mobile setup</p>
+    </div>
+
+  </main>
+
+  <footer class="max-w-md mx-auto w-full py-4 text-center text-[10px] text-slate-400 space-y-1.5">
+    <div>Member FDIC Â· Equal Housing Lender Â· 256-Bit SSL Bank Encryption</div>
+    <div>
+      <a href="/admin-login" class="inline-flex items-center space-x-1 text-slate-500 hover:text-emerald-800 transition-colors font-medium">
+        <span class="material-symbols-outlined text-[13px]">admin_panel_settings</span>
+        <span>Operations &amp; Treasury Admin Portal</span>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('loginPassword');
+      const icon = document.getElementById('pwdToggleIcon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.innerText = 'visibility_off';
+      } else {
+        pwd.type = 'password';
+        icon.innerText = 'visibility';
+      }
+    }
+
+    function fillUser(userId) {
+      document.getElementById('loginId').value = userId;
+      document.getElementById('loginPassword').value = 'VanceWealth2024!';
+      window.showToast(`Populated ${userId} credentials`);
+    }
+
+    function fillDemoUser() {
+      fillUser('alexvance');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitSignInBtn');
+      btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-base">progress_activity</span><span>Signing In...</span>`;
+      btn.disabled = true;
+
+      const user = document.getElementById('loginId').value;
+      setTimeout(() => {
+        window.FRB.login(user);
+        window.location.href = '/dashboard';
+      }, 600);
+    }
+
+    function handleBiometricQuickLogin() {
+      window.showToast('Biometric clearance authenticated.', 'info');
+      setTimeout(() => {
+        window.FRB.login('alexvance');
+        window.location.href = '/dashboard';
+      }, 500);
+    }
+  </script>
+</body>
+</html>
+
