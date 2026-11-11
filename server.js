@@ -36,32 +36,32 @@ const server = http.createServer((req, res) => {
     return res.end('403 Forbidden');
   }
 
-  fs.stat(filePath, (err, stats) => {
+  // Clean URL mapping
+  let targetPath = filePath;
+  if (!fs.existsSync(targetPath) || fs.statSync(targetPath).isDirectory()) {
+    if (fs.existsSync(filePath + '.html')) {
+      targetPath = filePath + '.html';
+    }
+  }
+
+  fs.stat(targetPath, (err, stats) => {
     if (err || !stats.isFile()) {
-      // Check if it's a page without .html
-      const htmlPath = filePath + '.html';
-      fs.stat(htmlPath, (hErr, hStats) => {
-        if (!hErr && hStats.isFile()) {
-          serveFile(htmlPath, res);
-        } else {
-          res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-          res.end(`
-            <!DOCTYPE html>
-            <html>
-              <head><title>404 Not Found - First Republic</title></head>
-              <body style="font-family:sans-serif; text-align:center; padding:50px;">
-                <h2>Page Not Found</h2>
-                <p>The requested URL was not found on this server.</p>
-                <a href="/index.html">Return to Private Wealth Portal</a>
-              </body>
-            </html>
-          `);
-        }
-      });
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(`
+        <!DOCTYPE html>
+        <html>
+          <head><title>404 Not Found - First Republic</title></head>
+          <body style="font-family:sans-serif; text-align:center; padding:50px;">
+            <h2>Page Not Found</h2>
+            <p>The requested URL was not found on this server.</p>
+            <a href="/index.html">Return to Private Wealth Portal</a>
+          </body>
+        </html>
+      `);
       return;
     }
 
-    serveFile(filePath, res);
+    serveFile(targetPath, res);
   });
 });
 
