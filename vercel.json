@@ -1,16 +1,41 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/sign-in", "destination": "/sign-in.html" },
-    { "source": "/register", "destination": "/register.html" },
-    { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/transfer", "destination": "/transfer.html" },
-    { "source": "/activity", "destination": "/activity.html" },
-    { "source": "/cards", "destination": "/cards.html" },
-    { "source": "/admin-login", "destination": "/admin-login.html" },
-    { "source": "/admin", "destination": "/admin.html" }
+  "routes": [
+    {
+      "src": "/sign-in",
+      "dest": "/sign-in.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/register.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/transfer",
+      "dest": "/transfer.html"
+    },
+    {
+      "src": "/activity",
+      "dest": "/activity.html"
+    },
+    {
+      "src": "/cards",
+      "dest": "/cards.html"
+    },
+    {
+      "src": "/admin-login",
+      "dest": "/admin-login.html"
+    },
+    {
+      "src": "/admin",
+      "dest": "/admin.html"
+    },
+    {
+      "handle": "filesystem"
+    }
   ]
 }
